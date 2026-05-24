@@ -59,13 +59,14 @@
             <tr>
               <th style="width:60px">序号</th>
               <th style="min-width:180px">模板名称</th>
+              <th style="min-width:200px">模板描述</th>
               <th style="width:100px">类型</th>
               <th style="width:120px">创建者</th>
               <th style="width:100px">使用次数</th>
               <th style="width:90px">状态</th>
               <th style="width:170px">创建时间</th>
               <th style="width:170px">更新时间</th>
-              <th style="width:220px;text-align:center;position:sticky;right:0;background:var(--bg-header)">操作</th>
+              <th style="width:260px;text-align:center;position:sticky;right:0;background:var(--bg-header)">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -77,6 +78,7 @@
                 </span>
               </td>
               <td><span class="template-name">{{ row.name }}</span></td>
+              <td><span class="desc-text" :title="row.description">{{ row.description || '-' }}</span></td>
               <td>
                 <span class="tag tag-type">{{ getTypeText(row.type) }}</span>
               </td>
@@ -92,6 +94,7 @@
               <td><span class="time">{{ formatTime(row.updatedAt) }}</span></td>
               <td class="actions-cell">
                 <div class="actions">
+                  <button class="btn-sm btn-sm-view" @click="handleView(row)">查看</button>
                   <button class="btn-sm btn-sm-primary" @click="handleEdit(row)">编辑</button>
                   <button
                     v-if="row.isDefault !== 1"
@@ -104,7 +107,7 @@
               </td>
             </tr>
             <tr v-if="!adminStore.loading && (!adminStore.templates?.items?.length)">
-              <td colspan="9" class="empty-cell">
+              <td colspan="10" class="empty-cell">
                 <div class="empty">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -169,6 +172,98 @@
         <el-button type="primary" :loading="submitting" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 查看弹窗 -->
+    <el-dialog v-model="viewVisible" title="模板详情" width="700px" destroy-on-close>
+      <div class="view-detail" v-if="viewData">
+        <div class="view-row">
+          <span class="view-label">模板ID</span>
+          <span class="view-value">{{ viewData.id }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">模板名称</span>
+          <span class="view-value">{{ viewData.name }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">模板描述</span>
+          <span class="view-value">{{ viewData.description || '-' }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">模板类型</span>
+          <span class="view-value">{{ getTypeText(viewData.type) }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">创建者ID</span>
+          <span class="view-value">{{ viewData.creatorId }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">创建者名称</span>
+          <span class="view-value">{{ viewData.creatorName || '-' }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">使用次数</span>
+          <span class="view-value">{{ viewData.usageCount }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">状态</span>
+          <span class="view-value">
+            <span class="status" :class="viewData.status === 1 ? 'status-on' : 'status-off'">
+              <i class="status-dot"></i>
+              {{ viewData.status === 1 ? '启用' : '禁用' }}
+            </span>
+          </span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">是否默认</span>
+          <span class="view-value">{{ viewData.isDefault === 1 ? '是' : '否' }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">是否公开</span>
+          <span class="view-value">{{ viewData.isPublic ? '是' : '否' }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">创建时间</span>
+          <span class="view-value">{{ formatTime(viewData.createdAt) }}</span>
+        </div>
+        <div class="view-row">
+          <span class="view-label">更新时间</span>
+          <span class="view-value">{{ formatTime(viewData.updatedAt) }}</span>
+        </div>
+        <div class="view-row" v-if="viewData.config">
+          <span class="view-label">模板配置</span>
+          <div class="view-config">
+            <div class="config-section" v-if="viewData.config.fontSettings">
+              <div class="config-title">字体设置</div>
+              <div class="config-item">字体: {{ viewData.config.fontSettings.fontFamily || '-' }}</div>
+              <div class="config-item">字号: {{ viewData.config.fontSettings.fontSize || '-' }}</div>
+              <div class="config-item">代码字体: {{ viewData.config.fontSettings.codeFontFamily || '-' }}</div>
+              <div class="config-item">代码字号: {{ viewData.config.fontSettings.codeFontSize || '-' }}</div>
+            </div>
+            <div class="config-section" v-if="viewData.config.pageSettings">
+              <div class="config-title">页面设置</div>
+              <div class="config-item">纸张大小: {{ viewData.config.pageSettings.pageSize || '-' }}</div>
+              <div class="config-item">方向: {{ viewData.config.pageSettings.orientation === 'portrait' ? '纵向' : '横向' }}</div>
+              <div class="config-item" v-if="viewData.config.pageSettings.margins">
+                边距: 上{{ viewData.config.pageSettings.margins.top }}cm / 下{{ viewData.config.pageSettings.margins.bottom }}cm / 左{{ viewData.config.pageSettings.margins.left }}cm / 右{{ viewData.config.pageSettings.margins.right }}cm
+              </div>
+            </div>
+            <div class="config-section" v-if="viewData.config.paragraphSettings">
+              <div class="config-title">段落设置</div>
+              <div class="config-item">行距: {{ viewData.config.paragraphSettings.lineSpacing || '-' }}</div>
+              <div class="config-item">首行缩进: {{ viewData.config.paragraphSettings.firstLineIndent || 0 }} 字符</div>
+            </div>
+            <div class="config-section" v-if="viewData.config.headerFooterSettings">
+              <div class="config-title">页眉页脚</div>
+              <div class="config-item">页眉: {{ viewData.config.headerFooterSettings.header || '-' }}</div>
+              <div class="config-item">页脚: {{ viewData.config.headerFooterSettings.footer || '-' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="viewVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -189,6 +284,8 @@ const isEdit = ref(false)
 const formRef = ref<FormInstance>()
 const submitting = ref(false)
 const currentId = ref<number | null>(null)
+const viewVisible = ref(false)
+const viewData = ref<Template | null>(null)
 
 const formData = reactive({
   name: '',
@@ -268,6 +365,11 @@ const resetForm = () => {
 const handleCreate = () => {
   resetForm()
   formVisible.value = true
+}
+
+const handleView = (row: Template) => {
+  viewData.value = row
+  viewVisible.value = true
 }
 
 const handleEdit = (row: Template) => {
@@ -498,7 +600,7 @@ onMounted(() => fetchData())
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  min-width: 1200px;
+  min-width: 1400px;
   table-layout: auto;
   border: 1px solid var(--border-light);
 }
@@ -547,6 +649,16 @@ onMounted(() => fetchData())
 }
 
 .template-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.desc-text { 
+  font-size: 13px; 
+  color: var(--text-secondary); 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
 .creator-text { font-size: 13px; color: var(--text-secondary); }
 .count-text { font-size: 13px; color: var(--text-secondary); }
 
@@ -621,6 +733,9 @@ onMounted(() => fetchData())
 .btn-sm-primary { color: var(--c-brand); border-color: #c7d2fe; background: var(--c-brand-light); }
 .btn-sm-primary:hover { background: #e0e7ff; border-color: #a5b4fc; }
 
+.btn-sm-view { color: var(--c-purple); border-color: #ddd6fe; background: var(--c-purple-bg); }
+.btn-sm-view:hover { background: #ede9fe; border-color: #c4b5fd; }
+
 .btn-sm-info { color: var(--c-blue); border-color: #bfdbfe; background: var(--c-blue-bg); }
 .btn-sm-info:hover { background: #dbeafe; border-color: #93c5fd; }
 
@@ -684,5 +799,65 @@ onMounted(() => fetchData())
   .toolbar { flex-wrap: wrap; }
   .search-wrap { max-width: none; }
   .footer { flex-direction: column; gap: 10px; align-items: flex-start; }
+}
+
+/* ===== 查看弹窗样式 ===== */
+.view-detail {
+  padding: 8px 0;
+}
+
+.view-row {
+  display: flex;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.view-row:last-child {
+  border-bottom: none;
+}
+
+.view-label {
+  flex-shrink: 0;
+  width: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.view-value {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  word-break: break-all;
+}
+
+.view-config {
+  flex: 1;
+  background: #f9fafb;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.config-section {
+  margin-bottom: 12px;
+}
+
+.config-section:last-child {
+  margin-bottom: 0;
+}
+
+.config-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--border-normal);
+}
+
+.config-item {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 0;
 }
 </style>

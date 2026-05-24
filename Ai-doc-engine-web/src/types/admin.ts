@@ -94,15 +94,57 @@ export interface ExportLog {
 export interface Template {
   id: number
   name: string
+  description?: string
   type: string // contract, report, invoice, letter, other
   creatorId: number
   creatorName: string
   usageCount: number
   status: number // 1=启用, 0=禁用
   isDefault: number // 1=默认, 0=非默认
+  isPublic?: boolean
+  config?: TemplateConfig
   content?: string
   createdAt: string
   updatedAt: string
+}
+
+// 模板配置
+export interface TemplateConfig {
+  fontSettings?: {
+    fontSize?: number
+    fontFamily?: string
+    codeFontSize?: number
+    headingFonts?: Record<string, { bold?: boolean; size?: number; family?: string }>
+    codeFontFamily?: string
+  }
+  pageSettings?: {
+    margins?: {
+      top?: number
+      left?: number
+      right?: number
+      bottom?: number
+      gutter?: number
+    }
+    pageSize?: string
+    orientation?: string
+  }
+  paragraphSettings?: {
+    alignment?: string
+    lineSpacing?: number
+    firstLineIndent?: number
+    paragraphSpacing?: {
+      after?: number
+      before?: number
+    }
+  }
+  headerFooterSettings?: {
+    footer?: string
+    header?: string
+    footerHeight?: number
+    headerHeight?: number
+    oddEvenDifferent?: boolean
+    firstPageDifferent?: boolean
+  }
 }
 
 // 密码重置日志
