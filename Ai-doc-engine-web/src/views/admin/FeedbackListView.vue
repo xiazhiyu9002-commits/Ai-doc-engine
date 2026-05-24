@@ -335,26 +335,6 @@ const visiblePages = computed(() => {
   return pages
 })
 
-const getTypeLabel = (type: FeedbackType) => {
-  const labels: Record<FeedbackType, string> = {
-    suggestion: '建议',
-    bug: '问题',
-    feature: '功能',
-    other: '其他'
-  }
-  return labels[type]
-}
-
-const getTypeClass = (type: FeedbackType) => {
-  const classes: Record<FeedbackType, string> = {
-    suggestion: 'tag-info',
-    bug: 'tag-warning',
-    feature: 'tag-purple',
-    other: 'tag-default'
-  }
-  return classes[type]
-}
-
 const getStatusLabel = (status: FeedbackStatus) => {
   const labels: Record<FeedbackStatus, string> = {
     pending: '待处理',
@@ -393,10 +373,6 @@ const getPriorityClass = (priority: FeedbackPriority) => {
     urgent: 'tag-danger'
   }
   return classes[priority]
-}
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleString('zh-CN')
 }
 
 const formatDateOnly = (date: string) => {
@@ -499,11 +475,6 @@ const loadFeedbacks = async () => {
   } finally {
     loading.value = false
   }
-}
-
-const handleClearSearch = () => {
-  filters.value.keyword = ''
-  loadFeedbacks()
 }
 
 const changePage = (newPage: number) => {

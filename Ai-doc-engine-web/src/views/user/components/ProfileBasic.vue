@@ -120,6 +120,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules, type UploadRequestOptions } from 'element-plus'
 import { userApi } from '@/api/user'
+import { getAvatarUrl } from '@/utils/config'
 import type { UserProfile } from '@/types/user'
 import { useAuthStore } from '@/store/auth'
 
@@ -166,11 +167,11 @@ const avatarText = computed(() => {
   return name ? name.charAt(0).toUpperCase() : ''
 })
 
-// 头像样式
+// 头像样式 - 使用 getAvatarUrl 处理 URL
 const avatarStyle = computed(() => {
   if (formData.value.avatarUrl) {
     return {
-      backgroundImage: `url(${formData.value.avatarUrl})`,
+      backgroundImage: `url(${getAvatarUrl(formData.value.avatarUrl)})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }

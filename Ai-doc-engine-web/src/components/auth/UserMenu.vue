@@ -13,8 +13,8 @@
     popper-class="user-dropdown-popper"
   >
     <div class="user-menu">
-      <div class="user-avatar">
-        <span>{{ avatarText }}</span>
+      <div class="user-avatar" :style="avatarStyle">
+        <span v-if="!user?.avatarUrl">{{ avatarText }}</span>
       </div>
       <span class="username">{{ displayName }}</span>
       <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,8 +24,8 @@
     <template #dropdown>
       <el-dropdown-menu>
         <div class="dropdown-header">
-          <div class="dropdown-avatar">
-            <span>{{ avatarText }}</span>
+          <div class="dropdown-avatar" :style="dropdownAvatarStyle">
+            <span v-if="!user?.avatarUrl">{{ avatarText }}</span>
           </div>
           <div class="dropdown-user-info">
             <span class="dropdown-username">{{ displayName }}</span>
@@ -72,6 +72,7 @@ import { computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
+import { getAvatarUrl } from '@/utils/config'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -82,6 +83,28 @@ const isAdmin = computed(() => user.value?.role === 'ADMIN')
 
 const avatarText = computed(() => {
   return displayName.value.charAt(0).toUpperCase()
+})
+
+const avatarStyle = computed(() => {
+  if (user.value?.avatarUrl) {
+    return {
+      backgroundImage: `url(${getAvatarUrl(user.value.avatarUrl)})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+  }
+  return {}
+})
+
+const dropdownAvatarStyle = computed(() => {
+  if (user.value?.avatarUrl) {
+    return {
+      backgroundImage: `url(${getAvatarUrl(user.value.avatarUrl)})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+  }
+  return {}
 })
 
 const handleCommand = async (command: string) => {

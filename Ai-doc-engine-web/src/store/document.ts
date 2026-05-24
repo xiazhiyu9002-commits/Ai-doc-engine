@@ -3,7 +3,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { documentApi } from '@/api/document'
-import type { UdmDocument, UdmBlock } from '@/types/document'
+import type { UdmDocument, UdmBlock, ParseResponse } from '@/types/document'
 
 export const useDocumentStore = defineStore('document', () => {
   const markdown = ref<string>('')
@@ -15,7 +15,9 @@ export const useDocumentStore = defineStore('document', () => {
     loading.value = true
     try {
       const response = await documentApi.parseMarkdown({ markdown: content })
-      udm.value = response.data
+      // 处理返回数据：可能是 ParseResponse 或直接的 UdmDocument
+      const data = response.data as ParseResponse | UdmDocument
+      udm.value = 'udm' in data ? data.udm : data
       markdown.value = content
     } finally {
       loading.value = false
