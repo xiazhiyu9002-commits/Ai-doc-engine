@@ -98,7 +98,8 @@
           </span>
           <div class="user-info">
             <div class="user-avatar">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <img v-if="authStore.user?.avatarUrl" :src="authStore.user.avatarUrl" alt="头像" />
+              <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
@@ -615,6 +616,13 @@ onUnmounted(() => {
   justify-content: center;
   color: #fff;
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  overflow: hidden;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-avatar svg {

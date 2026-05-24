@@ -63,7 +63,7 @@ app:
     # 基础上传目录 - 所有上传文件的根目录
     # 开发环境: ../uploads (项目根目录的上一级)
     # 生产环境: 建议使用绝对路径，如 /data/uploads 或 D:/uploads
-    upload-dir: ./uploads
+    upload-dir: ../uploads
     
     # URL访问前缀 - 用于生成文件的访问URL
     # 需要与 WebConfig 中配置的静态资源路径一致

@@ -14,7 +14,8 @@
   >
     <div class="user-menu">
       <div class="user-avatar">
-        <span>{{ avatarText }}</span>
+        <img v-if="user?.avatarUrl" :src="user.avatarUrl" alt="头像" />
+        <span v-else>{{ avatarText }}</span>
       </div>
       <span class="username">{{ displayName }}</span>
       <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +26,8 @@
       <el-dropdown-menu>
         <div class="dropdown-header">
           <div class="dropdown-avatar">
-            <span>{{ avatarText }}</span>
+            <img v-if="user?.avatarUrl" :src="user.avatarUrl" alt="头像" />
+            <span v-else>{{ avatarText }}</span>
           </div>
           <div class="dropdown-user-info">
             <span class="dropdown-username">{{ displayName }}</span>
@@ -132,6 +134,13 @@ const handleCommand = async (command: string) => {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-avatar span {
@@ -173,6 +182,13 @@ const handleCommand = async (command: string) => {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.dropdown-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .dropdown-avatar span {
