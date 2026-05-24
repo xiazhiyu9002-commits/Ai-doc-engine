@@ -76,12 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/announcement/list").permitAll()
                         .requestMatchers("/api/announcement/*").permitAll()
 
-                        // 静态资源路径 - 支持标准格式和兼容格式
                         .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/avatar/**").permitAll()
-                        .requestMatchers("/feedback/**").permitAll()
-                        .requestMatchers("/document/**").permitAll()
-                        .requestMatchers("/temp/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

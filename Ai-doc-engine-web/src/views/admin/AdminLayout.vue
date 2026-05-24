@@ -97,8 +97,8 @@
             管理员
           </span>
           <div class="user-info">
-            <div class="user-avatar" :style="avatarStyle">
-              <svg v-if="!authStore.user?.avatarUrl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="user-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
@@ -120,21 +120,9 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
-import { getAvatarUrl } from '@/utils/config'
 
 const route = useRoute()
 const authStore = useAuthStore()
-
-const avatarStyle = computed(() => {
-  if (authStore.user?.avatarUrl) {
-    return {
-      backgroundImage: `url(${getAvatarUrl(authStore.user.avatarUrl)})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }
-  }
-  return {}
-})
 
 // 响应式状态
 const isMobile = ref(false)

@@ -11,10 +11,18 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(authUtils.getToken())
   const isAuthenticated = ref<boolean>(authUtils.isAuthenticated())
 
+  const applyAuth = (newToken: string, newUser: User) => {
+    token.value = newToken
+    user.value = newUser
+    isAuthenticated.value = true
+    
+    authUtils.saveAuth(newToken, newUser)
+  }
+
   // 登录
   const login = async (data: LoginRequest) => {
     const response = await authApi.login(data)
-    const { token: newToken } = response.data
+    const { token: newToken, user: newUser } = response.data
     token.value = newToken
     isAuthenticated.value = true
     authUtils.saveToken(newToken)

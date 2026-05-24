@@ -15,7 +15,7 @@
       <div class="profile-sidebar">
         <div class="user-card">
           <div class="user-avatar">
-            <img v-if="avatarSrc" :src="avatarSrc" alt="头像" />
+            <img v-if="profile?.avatarUrl" :src="profile.avatarUrl" alt="头像" />
             <span v-else class="avatar-text">{{ avatarText }}</span>
           </div>
           <div class="user-info">
@@ -67,7 +67,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import { userApi } from '@/api/user'
-import { getAvatarUrl } from '@/utils/config'
 import type { UserProfile } from '@/types/user'
 import ProfileBasic from './components/ProfileBasic.vue'
 import ProfileSecurity from './components/ProfileSecurity.vue'
@@ -84,9 +83,19 @@ const avatarText = computed(() => {
   return name ? name.charAt(0).toUpperCase() : ''
 })
 
-const avatarSrc = computed(() => {
-  if (!profile.value?.avatarUrl) return ''
-  return getAvatarUrl(profile.value.avatarUrl)
+const roleTagType = computed(() => {
+  const role = profile.value?.role
+  if (role === 'ADMIN') return 'danger'
+  if (role === 'TEACHER') return 'warning'
+  return 'info'
+})
+
+const roleLabel = computed(() => {
+  const role = profile.value?.role
+  if (role === 'ADMIN') return '管理员'
+  if (role === 'TEACHER') return '教师'
+  if (role === 'STUDENT') return '学生'
+  return '普通用户'
 })
 
 const fetchProfile = async () => {

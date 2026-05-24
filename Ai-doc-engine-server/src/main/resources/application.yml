@@ -48,49 +48,33 @@ jwt:
 # 应用配置
 app:
   # ==================== 文件存储配置 ====================
+  # 修改路径配置指南：
+  # 1. 修改 upload-dir 为目标存储路径（支持相对路径和绝对路径）
+  # 2. 生产环境建议使用绝对路径，如: /var/www/uploads 或 D:/uploads
+  # 3. 修改后重启应用即可生效
   # 
-  # 【重要】路径配置说明：
-  # 
-  # 1. 开发环境：
-  #    - 默认使用 ./uploads（当前工作目录下的 uploads 文件夹）
-  #    - 可通过环境变量 APP_FILE_UPLOAD_DIR 覆盖
-  #    - Windows 示例：set APP_FILE_UPLOAD_DIR=D:/ai-doc-uploads
-  #    - Linux/Mac 示例：export APP_FILE_UPLOAD_DIR=/var/www/uploads
-  # 
-  # 2. 生产环境：
-  #    - 必须通过环境变量 APP_FILE_UPLOAD_DIR 设置绝对路径
-  #    - Linux 示例：export APP_FILE_UPLOAD_DIR=/app/uploads
-  #    - Windows 示例：set APP_FILE_UPLOAD_DIR=D:/app/uploads
-  # 
-  # 3. 目录结构（自动创建）：
-  #    uploads/
-  #    ├── avatar/          # 用户头像
-  #    ├── feedback/        # 用户反馈附件
-  #    ├── document/        # 文档图片
-  #    └── temp/            # 临时文件
-  # 
-  # 4. 权限要求：
-  #    - 应用必须有读写权限
-  #    - Linux: chmod 755 uploads
-  # 
+  # 目录结构：
+  # uploads/
+  # ├── avatar/          # 用户头像 (SubDir.AVATAR)
+  # ├── feedback/        # 用户反馈附件 (SubDir.FEEDBACK)
+  # ├── document/        # 文档图片 (SubDir.DOCUMENT)
+  # └── temp/            # 临时文件 (SubDir.TEMP)
   file:
-    # 基础上传目录 - 支持环境变量覆盖
-    # 开发环境默认: ../uploads（项目根目录的 uploads 文件夹）
-    # 生产环境必须: 通过环境变量 APP_FILE_UPLOAD_DIR 设置绝对路径
-    # 示例: /app/uploads (Linux) 或 D:/uploads (Windows)
-    upload-dir: ${APP_FILE_UPLOAD_DIR:../uploads}
+    # 基础上传目录 - 所有上传文件的根目录
+    # 开发环境: ../uploads (项目根目录的上一级)
+    # 生产环境: 建议使用绝对路径，如 /data/uploads 或 D:/uploads
+    upload-dir: ../uploads
     
     # URL访问前缀 - 用于生成文件的访问URL
-    # 需要与 WebMvcConfig 中配置的静态资源路径一致
-    # 生产环境如需修改，通过环境变量 APP_FILE_URL_PREFIX 设置
-    url-prefix: ${APP_FILE_URL_PREFIX:/uploads}
+    # 需要与 WebConfig 中配置的静态资源路径一致
+    url-prefix: /uploads
     
     # 反馈文件子目录名称（相对于 upload-dir）
     feedback-dir: feedback
     
     # 文件大小限制配置
-    max-size: ${APP_FILE_MAX_SIZE:10485760}              # 通用文件大小限制 (默认10MB)
-    image-max-size: ${APP_FILE_IMAGE_MAX_SIZE:5242880}   # 图片大小限制 (默认5MB)
+    max-size: 10485760              # 通用文件大小限制 (10MB)
+    image-max-size: 5242880         # 图片大小限制 (5MB)
     
     # 文件类型配置
     allowed-extensions: jpg,jpeg,png,gif,webp  # 允许的文件扩展名

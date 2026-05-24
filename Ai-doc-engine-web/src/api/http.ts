@@ -5,16 +5,9 @@ import { ElMessage } from 'element-plus'
 import { authUtils } from '@/utils/auth'
 import router from '@/router'
 
-// API 基础路径配置
-// 开发环境: 使用 Vite 代理，baseURL 为 '/api'
-// 生产环境: 使用环境变量 VITE_API_BASE_URL，如果未设置则使用相对路径 '/api'
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL 
-  ? `${import.meta.env.VITE_API_BASE_URL}/api`
-  : '/api'
-
 // 创建 axios 实例
 const http: AxiosInstance = axios.create({
-  baseURL: apiBaseUrl,
+  baseURL: '/api',
   timeout: 3000000,
   headers: {
     'Content-Type': 'application/json'
