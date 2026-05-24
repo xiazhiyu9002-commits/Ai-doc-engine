@@ -80,8 +80,8 @@
                 </span>
               </td>
               <td>
-                <span class="time" :class="{ 'time-expired': isExpired(row.expiresAt) && row.status === 'pending' }">
-                  {{ formatTime(row.expiresAt) }}
+                <span class="time" :class="{ 'time-expired': isExpired(row.expireAt) && row.status === 'pending' }">
+                  {{ formatTime(row.expireAt) }}
                 </span>
               </td>
               <td>
@@ -144,7 +144,7 @@
         </div>
         <div class="detail-row">
           <label>过期时间：</label>
-          <span>{{ formatTime(currentLog.expiresAt) }}</span>
+          <span>{{ formatTime(currentLog.expireAt) }}</span>
         </div>
         <div class="detail-row">
           <label>使用时间：</label>
@@ -205,8 +205,8 @@ const maskToken = (token: string) => {
   return token.slice(0, 8) + '****' + token.slice(-4)
 }
 
-const isExpired = (expiresAt: string) => {
-  return new Date(expiresAt) < new Date()
+const isExpired = (expireAt: string) => {
+  return new Date(expireAt) < new Date()
 }
 
 const getSequenceNumber = (index: number) => {

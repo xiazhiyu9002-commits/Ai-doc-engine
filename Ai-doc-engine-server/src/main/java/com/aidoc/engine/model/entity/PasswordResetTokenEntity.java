@@ -37,6 +37,9 @@ public class PasswordResetTokenEntity {
     @Builder.Default
     private Boolean used = false;
     
+    @Column(name = "used_at")
+    private LocalDateTime usedAt;
+    
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

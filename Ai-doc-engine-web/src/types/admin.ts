@@ -113,7 +113,7 @@ export interface PasswordResetLog {
   nickname?: string
   token: string
   status: string // pending, used, expired
-  expiresAt: string
+  expireAt: string
   usedAt?: string
   createdAt: string
 }

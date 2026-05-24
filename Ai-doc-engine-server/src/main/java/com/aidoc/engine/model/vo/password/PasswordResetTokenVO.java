@@ -57,6 +57,16 @@ public class PasswordResetTokenVO {
     private Boolean used;
     
     /**
+     * 使用时间
+     */
+    private LocalDateTime usedAt;
+    
+    /**
+     * 状态 (pending/used/expired)
+     */
+    private String status;
+    
+    /**
      * 状态描述
      */
     private String statusDesc;

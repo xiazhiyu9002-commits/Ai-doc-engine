@@ -196,12 +196,16 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         boolean isExpired = entity.getExpireAt().isBefore(now);
         boolean isUsed = Boolean.TRUE.equals(entity.getUsed());
         
+        String status;
         String statusDesc;
         if (isUsed) {
+            status = "used";
             statusDesc = "已使用";
         } else if (isExpired) {
+            status = "expired";
             statusDesc = "已过期";
         } else {
+            status = "pending";
             statusDesc = "有效";
         }
         
@@ -217,6 +221,8 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
                 .token(maskedToken)
                 .expireAt(entity.getExpireAt())
                 .used(isUsed)
+                .usedAt(entity.getUsedAt())
+                .status(status)
                 .statusDesc(statusDesc)
                 .createdAt(entity.getCreatedAt())
                 .expired(isExpired)

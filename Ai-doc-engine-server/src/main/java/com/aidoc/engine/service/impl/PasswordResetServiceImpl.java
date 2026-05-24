@@ -106,6 +106,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             userRepository.save(user);
             
             tokenEntity.setUsed(true);
+            tokenEntity.setUsedAt(LocalDateTime.now());
             tokenRepository.save(tokenEntity);
             
             log.info("密码重置成功: userId={}", user.getId());

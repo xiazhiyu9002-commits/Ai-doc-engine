@@ -12,7 +12,7 @@
  Target Server Version : 170009 (170009)
  File Encoding         : 65001
 
- Date: 24/05/2026 12:51:07
+ Date: 24/05/2026 18:13:17
 */
 
 
@@ -344,6 +344,7 @@ COMMENT ON TABLE "public"."sys_login_log" IS '登录日志表';
 -- ----------------------------
 INSERT INTO "public"."sys_login_log" VALUES (95, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 18:32:18.183097+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (97, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 11:20:01.14672+08', 'Chrome');
+INSERT INTO "public"."sys_login_log" VALUES (99, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 16:10:15.560686+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (96, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 19:26:28.692433+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (98, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 12:49:13.088928+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (92, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-20 21:10:44.925355+08', 'Chrome');
@@ -361,7 +362,8 @@ CREATE TABLE "public"."sys_password_reset_token" (
   "token" varchar(128) COLLATE "pg_catalog"."default" NOT NULL,
   "expire_at" timestamptz(6) NOT NULL,
   "used" bool NOT NULL DEFAULT false,
-  "created_at" timestamptz(6) NOT NULL DEFAULT now()
+  "created_at" timestamptz(6) NOT NULL DEFAULT now(),
+  "used_at" timestamptz(6)
 )
 ;
 COMMENT ON COLUMN "public"."sys_password_reset_token"."id" IS '主键ID';
@@ -371,12 +373,13 @@ COMMENT ON COLUMN "public"."sys_password_reset_token"."token" IS '重置令牌';
 COMMENT ON COLUMN "public"."sys_password_reset_token"."expire_at" IS '过期时间';
 COMMENT ON COLUMN "public"."sys_password_reset_token"."used" IS '是否已使用';
 COMMENT ON COLUMN "public"."sys_password_reset_token"."created_at" IS '创建时间';
+COMMENT ON COLUMN "public"."sys_password_reset_token"."used_at" IS '使用时间';
 COMMENT ON TABLE "public"."sys_password_reset_token" IS '密码重置令牌表';
 
 -- ----------------------------
 -- Records of sys_password_reset_token
 -- ----------------------------
-INSERT INTO "public"."sys_password_reset_token" VALUES (1, 10, 'admin@example.com', 'test-token-for-demo-purposes-only', '2026-05-24 19:59:34.314231+08', 'f', '2026-05-23 19:59:34.314231+08');
+INSERT INTO "public"."sys_password_reset_token" VALUES (1, 10, 'admin@example.com', 'test-token-for-demo-purposes-only', '2026-05-24 12:59:34.314231+08', 'f', '2026-05-23 19:59:34.314231+08', '2026-05-23 21:59:34.314231+08');
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -416,8 +419,8 @@ COMMENT ON TABLE "public"."sys_user" IS '用户表';
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
+INSERT INTO "public"."sys_user" VALUES (10, 'admin', 'admin@example.com', '$2a$10$/XncWou71LX0GNvns8f40u9HASfhDMc1bTjPv0Eg/gjN6lUVDwGLC', '管理员', '/uploads/avatar/81ecc46f-bf27-42bf-bae9-ac23d8f51e4e.jpg', 'ADMIN', 'active', '2026-05-24 16:10:15.552189+08', '127.0.0.1', '2026-05-20 20:49:28.213873+08', '2026-05-24 16:10:15.224894+08', '数学与大数据学院');
 INSERT INTO "public"."sys_user" VALUES (11, 'lyj3401456945', '3401456945@qq.com', '$2a$10$jvljLvGCSt2WHt4pU5cFvuL0HhBODxUiwl8qsk0VUOVCmR5jlVQjG', '哈哈', '', 'USER', 'active', NULL, NULL, '2026-05-24 12:36:38.511338+08', '2026-05-24 12:48:58.889554+08', '数学与大数据学院');
-INSERT INTO "public"."sys_user" VALUES (10, 'admin', 'admin@example.com', '$2a$10$/XncWou71LX0GNvns8f40u9HASfhDMc1bTjPv0Eg/gjN6lUVDwGLC', '管理员', '/uploads/avatar/81ecc46f-bf27-42bf-bae9-ac23d8f51e4e.jpg', 'ADMIN', 'active', '2026-05-24 12:49:13.068991+08', '127.0.0.1', '2026-05-20 20:49:28.213873+08', '2026-05-24 12:49:12.787117+08', '数学与大数据学院');
 
 -- ----------------------------
 -- Table structure for user_feedback
@@ -580,7 +583,7 @@ SELECT setval('"public"."sys_announcement_id_seq"', 2, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."sys_login_log_id_seq"
 OWNED BY "public"."sys_login_log"."id";
-SELECT setval('"public"."sys_login_log_id_seq"', 98, true);
+SELECT setval('"public"."sys_login_log_id_seq"', 99, true);
 
 -- ----------------------------
 -- Alter sequences owned by
