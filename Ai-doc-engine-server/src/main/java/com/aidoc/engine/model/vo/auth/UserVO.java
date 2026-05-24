@@ -1,0 +1,31 @@
+package com.aidoc.engine.model.vo.auth;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserVO {
+    
+    private Long id;
+    
+    private String username;
+    
+    private String email;
+    
+    private String nickname;
+    
+    private String avatarUrl;
+    
+    private String department;
+    
+    private String role;
+    
+    private LocalDateTime createdAt;
+}

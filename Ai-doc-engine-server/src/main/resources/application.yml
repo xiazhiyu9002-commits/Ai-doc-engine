@@ -1,0 +1,131 @@
+spring:
+  application:
+    name: ai-doc-engine-server
+  
+  profiles:
+    active: dev
+  
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ai_doc_engine
+    username: postgres
+    password: 123456  # 改成你设置的密码
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # 邮件配置（敏感信息通过环境变量覆盖）
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.qq.com}
+    port: ${SPRING_MAIL_PORT:465}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+# 服务器配置
+server:
+  port: 8687
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+# JWT配置
+jwt:
+  secret: ai-doc-engine-jwt-secret-key-change-in-production-2024
+  expiration: 604800000  # 7天（毫秒）
+  header: Authorization
+  prefix: Bearer 
+
+# 应用配置
+app:
+  # ==================== 文件存储配置 ====================
+  # 修改路径配置指南：
+  # 1. 修改 upload-dir 为目标存储路径（支持相对路径和绝对路径）
+  # 2. 生产环境建议使用绝对路径，如: /var/www/uploads 或 D:/uploads
+  # 3. 修改后重启应用即可生效
+  # 
+  # 目录结构：
+  # uploads/
+  # ├── avatar/          # 用户头像 (SubDir.AVATAR)
+  # ├── feedback/        # 用户反馈附件 (SubDir.FEEDBACK)
+  # ├── document/        # 文档图片 (SubDir.DOCUMENT)
+  # └── temp/            # 临时文件 (SubDir.TEMP)
+  file:
+    # 基础上传目录 - 所有上传文件的根目录
+    # 开发环境: ../uploads (项目根目录的上一级)
+    # 生产环境: 建议使用绝对路径，如 /data/uploads 或 D:/uploads
+    upload-dir: ../uploads
+    
+    # URL访问前缀 - 用于生成文件的访问URL
+    # 需要与 WebConfig 中配置的静态资源路径一致
+    url-prefix: /uploads
+    
+    # 反馈文件子目录名称（相对于 upload-dir）
+    feedback-dir: feedback
+    
+    # 文件大小限制配置
+    max-size: 10485760              # 通用文件大小限制 (10MB)
+    image-max-size: 5242880         # 图片大小限制 (5MB)
+    
+    # 文件类型配置
+    allowed-extensions: jpg,jpeg,png,gif,webp  # 允许的文件扩展名
+    max-image-count: 5                           # 单次上传最大图片数量
+      
+  ocr:
+    provider: custom
+    api-url: http://127.0.0.1:5000/parse
+    timeout: 3000000  # 3000秒
+  
+  # 密码重置配置
+  password-reset:
+    token: 
+      expire-hours: 24
+  
+  # 公式转换配置（使用 MathJax）
+  formula:
+    mathjax:
+      script-path: ${APP_FORMULA_MATHJAX_SCRIPT_PATH:mathjax-to-mathml.js}
+      node-command: ${APP_FORMULA_MATHJAX_NODE_COMMAND:node}
+
+  # Mermaid配置（Docker 用 mmdc，Windows 开发用 mmdc.cmd）
+  mermaid:
+    command: ${APP_MERMAID_COMMAND:mmdc.cmd}
+    timeout: 30
+    background: transparent
+    theme: default
+
+# 日志配置
+logging:
+  level:
+    root: WARN
+    com.aidoc.engine: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  pattern:
+    console: "%d{HH:mm:ss} %-5level %logger{20} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ai-doc-engine.log
+    max-size: 10MB
+    max-history: 30
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
