@@ -11,6 +11,17 @@
         <span class="char-count">当前字符数：{{ charCount }}</span>
       </div>
       <div class="header-right">
+        <button class="action-btn action-btn--clean" @click="handleCleanSpaces" title="清理AI输出中英文混排的多余空格">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 6L6 10H8L5 2L2 10H4L7 6H3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 6L13 10H15L12 2L9 10H11L14 6H10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M17 6L20 10H22L19 2L16 10H18L21 6H17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 14V22H8V14H4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 14V22H14V14H10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 14V22H20V14H16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>清理空格</span>
+        </button>
         <button class="action-btn action-btn--danger" @click="$emit('clear')">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -60,6 +71,8 @@
 import { ref, watch, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { throttle, getLineHeight, type ScrollData } from '@/utils/scroll'
 import { formatMathFormulas, hasBlockFormulas } from '@/utils/markdownFormatter'
+import { cleanAiOutputFull, getCleanStats } from '@/utils/textCleaner'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps<{
   modelValue: string
@@ -95,6 +108,42 @@ watch(() => props.modelValue, (newVal) => {
 
 const handleInput = () => {
   emit('update:modelValue', content.value)
+}
+
+const handleCleanSpaces = async () => {
+  if (!content.value.trim()) {
+    ElMessage.warning('没有内容可清理')
+    return
+  }
+  const original = content.value
+  const cleaned = cleanAiOutputFull(original)
+  if (cleaned === original) {
+    ElMessage.info('文本已很整洁，没有多余空格需要清理')
+    return
+  }
+  const stats = getCleanStats(original, cleaned)
+  const parts: string[] = []
+  if (stats.removedInvisible > 0) {
+    parts.push(`移除 ${stats.removedInvisible} 个不可见字符`)
+  }
+  if (stats.removedSpaces > 0) {
+    parts.push(`清理 ${stats.removedSpaces} 个多余空格`)
+  }
+  if (stats.removedNewlines > 0) {
+    parts.push(`清理 ${stats.removedNewlines} 个多余换行`)
+  }
+  try {
+    await ElMessageBox.confirm(
+      `共${parts.join('，')}。确认执行清理？`,
+      '清理空格',
+      { confirmButtonText: '确认清理', cancelButtonText: '取消', type: 'warning' }
+    )
+  } catch {
+    return
+  }
+  content.value = cleaned
+  handleInput()
+  ElMessage.success(`清理完成：${parts.join('，')}`)
 }
 
 const handleParse = () => {
@@ -496,6 +545,17 @@ defineExpose({
 .action-btn--danger:hover {
   background: #fef2f2;
   border-color: #fecaca;
+}
+
+.action-btn--clean {
+  color: #059669;
+  border-color: #a7f3d0;
+  background: #f0fdf4;
+}
+
+.action-btn--clean:hover {
+  background: #dcfce7;
+  border-color: #6ee7b7;
 }
 
 .action-btn--secondary:hover {
