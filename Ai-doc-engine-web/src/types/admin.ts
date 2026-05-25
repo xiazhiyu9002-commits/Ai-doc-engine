@@ -11,6 +11,8 @@ export interface AdminUser {
   lastLoginIp?: string
   createdAt: string
   updatedAt: string
+  ocrCount?: number
+  exportCount?: number
 }
 
 export interface LoginLog {
@@ -95,17 +97,18 @@ export interface Template {
   id: number
   name: string
   description?: string
-  type: string // contract, report, invoice, letter, other
-  creatorId: number
-  creatorName: string
-  usageCount: number
-  status: number // 1=启用, 0=禁用
-  isDefault: number // 1=默认, 0=非默认
+  templateType?: string // system, custom
+  type?: string // contract, report, invoice, letter, other (deprecated)
+  creatorId?: number
+  creatorName?: string
+  usageCount?: number
+  status?: number // 1=启用, 0=禁用
+  isDefault?: number // 1=默认, 0=非默认
   isPublic?: boolean
   config?: TemplateConfig
   content?: string
-  createdAt: string
-  updatedAt: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 // 模板配置

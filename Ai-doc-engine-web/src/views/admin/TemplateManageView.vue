@@ -80,7 +80,7 @@
               <td><span class="template-name">{{ row.name }}</span></td>
               <td><span class="desc-text" :title="row.description">{{ row.description || '-' }}</span></td>
               <td>
-                <span class="tag tag-type">{{ getTypeText(row.type) }}</span>
+                <span class="tag tag-type">{{ getTypeText(row.templateType) }}</span>
               </td>
               <td><span class="creator-text">{{ row.creatorName }}</span></td>
               <td><span class="count-text">{{ row.usageCount }}</span></td>
@@ -145,26 +145,18 @@
         <el-form-item label="模板名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入模板名称" maxlength="100" />
         </el-form-item>
-        <el-form-item label="模板类型" prop="type">
-          <el-select v-model="formData.type" placeholder="请选择类型" style="width: 100%">
-            <el-option label="合同" value="contract" />
-            <el-option label="报告" value="report" />
-            <el-option label="发票" value="invoice" />
-            <el-option label="信函" value="letter" />
-            <el-option label="其他" value="other" />
+        <el-form-item label="模板描述" prop="description">
+          <el-input v-model="formData.description" type="textarea" :rows="3" placeholder="请输入模板描述" maxlength="500" />
+        </el-form-item>
+        <el-form-item label="模板类型" prop="templateType">
+          <el-select v-model="formData.templateType" placeholder="请选择类型" style="width: 100%">
+            <el-option label="自定义" value="custom" />
+            <el-option label="系统" value="system" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-switch v-model="formData.status" :active-value="1" :inactive-value="0" />
-          <span class="status-label">{{ formData.status === 1 ? '启用' : '禁用' }}</span>
-        </el-form-item>
-        <el-form-item label="模板内容" prop="content">
-          <el-input
-            v-model="formData.content"
-            type="textarea"
-            :rows="8"
-            placeholder="请输入模板内容"
-          />
+        <el-form-item label="是否公开" prop="isPublic">
+          <el-switch v-model="formData.isPublic" />
+          <span class="status-label">{{ formData.isPublic ? '公开' : '私有' }}</span>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -190,7 +182,7 @@
         </div>
         <div class="view-row">
           <span class="view-label">模板类型</span>
-          <span class="view-value">{{ getTypeText(viewData.type) }}</span>
+          <span class="view-value">{{ getTypeText(viewData.templateType) }}</span>
         </div>
         <div class="view-row">
           <span class="view-label">创建者ID</span>
@@ -289,14 +281,48 @@ const viewData = ref<Template | null>(null)
 
 const formData = reactive({
   name: '',
-  type: '',
-  status: 1,
-  content: ''
+  templateType: 'custom',
+  description: '',
+  isPublic: true
 })
+
+const defaultTemplateConfig = {
+  pageSettings: {
+    pageSize: 'A4',
+    orientation: 'portrait',
+    margins: { top: 2.5, bottom: 2.5, left: 2.8, right: 2.5, gutter: 0.5 }
+  },
+  fontSettings: {
+    fontFamily: '宋体',
+    fontSize: 12,
+    headingFonts: {
+      h1: { family: '黑体', size: 22, bold: true },
+      h2: { family: '黑体', size: 18, bold: true },
+      h3: { family: '黑体', size: 16, bold: true },
+      h4: { family: '黑体', size: 14, bold: true }
+    },
+    codeFontFamily: 'Times New Roman',
+    codeFontSize: 10
+  },
+  paragraphSettings: {
+    lineSpacing: 1.5,
+    paragraphSpacing: { before: 0, after: 0 },
+    firstLineIndent: 2,
+    alignment: 'left'
+  },
+  headerFooterSettings: {
+    header: '',
+    footer: '第 {page} 页，共 {total} 页',
+    firstPageDifferent: true,
+    oddEvenDifferent: false,
+    headerHeight: 1.5,
+    footerHeight: 1.5
+  }
+}
 
 const formRules: FormRules = {
   name: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
-  type: [{ required: true, message: '请选择模板类型', trigger: 'change' }]
+  templateType: [{ required: true, message: '请选择模板类型', trigger: 'change' }]
 }
 
 const totalPages = computed(() => Math.ceil((adminStore.templates?.total ?? 0) / pageSize))
@@ -355,9 +381,9 @@ const handlePageChange = (p: number) => { currentPage.value = p; fetchData() }
 
 const resetForm = () => {
   formData.name = ''
-  formData.type = ''
-  formData.status = 1
-  formData.content = ''
+  formData.templateType = 'custom'
+  formData.description = ''
+  formData.isPublic = true
   currentId.value = null
   isEdit.value = false
 }
@@ -377,9 +403,9 @@ const handleEdit = (row: Template) => {
   isEdit.value = true
   currentId.value = row.id
   formData.name = row.name
-  formData.type = row.type
-  formData.status = row.status
-  formData.content = row.content || ''
+  formData.templateType = row.templateType || 'custom'
+  formData.description = row.description || ''
+  formData.isPublic = row.isPublic ?? true
   formVisible.value = true
 }
 
@@ -392,17 +418,17 @@ const handleSubmit = async () => {
       if (isEdit.value && currentId.value) {
         await adminStore.updateTemplate(currentId.value, {
           name: formData.name,
-          type: formData.type,
-          status: formData.status,
-          content: formData.content
+          description: formData.description,
+          config: defaultTemplateConfig
         })
         ElMessage.success('更新成功')
       } else {
         await adminStore.createTemplate({
           name: formData.name,
-          type: formData.type,
-          status: formData.status,
-          content: formData.content
+          description: formData.description,
+          templateType: formData.templateType,
+          config: defaultTemplateConfig,
+          isPublic: formData.isPublic
         })
         ElMessage.success('创建成功')
       }

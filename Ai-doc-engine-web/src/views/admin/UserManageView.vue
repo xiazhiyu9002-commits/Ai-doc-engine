@@ -45,13 +45,15 @@
               <th style="width:60px">序号</th>
               <th style="min-width:140px">用户信息</th>
               <th style="min-width:180px">邮箱</th>
-              <th style="width:100px">昵称</th>
-              <th style="width:100px">角色</th>
-              <th style="width:90px">状态</th>
+              <th style="width:150px">昵称</th>
+              <th style="width:150px">角色</th>
+              <th style="width:100px">状态</th>
+              <th style="width:90px">OCR次数</th>
+              <th style="width:90px">导出次数</th>
               <th style="min-width:150px">部门</th>
               <th style="width:150px">最后登录时间</th>
               <th style="width:150px">注册时间</th>
-              <th style="width:250px;text-align:center;position:sticky;right:0;background:var(--bg-header)">操作</th>
+              <th class="actions-header">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -78,6 +80,8 @@
                   {{ row.status === 1 ? '正常' : '已禁用' }}
                 </span>
               </td>
+              <td><span class="count-text">{{ row.ocrCount || 0 }}</span></td>
+              <td><span class="count-text">{{ row.exportCount || 0 }}</span></td>
               <td><span class="dept-text">{{ row.department || '-' }}</span></td>
               <td><span class="time">{{ formatTime(row.lastLoginAt) }}</span></td>
               <td><span class="time">{{ formatTime(row.createdAt) }}</span></td>
@@ -108,7 +112,7 @@
               </td>
             </tr>
             <tr v-if="!adminStore.loading && (!adminStore.users?.items?.length)">
-              <td colspan="10" class="empty-cell">
+              <td colspan="12" class="empty-cell">
                 <div class="empty">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -343,16 +347,37 @@ onMounted(() => fetchData())
 
 /* ===== 表格 ===== */
 .table-wrap { 
+  width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
   margin: 0 -16px;
   padding: 0 16px;
+  /* 限制最大高度，让滚动条出现在可视区域内 */
+  max-height: calc(100vh - 280px);
+}
+
+/* 滚动条样式优化 */
+.table-wrap::-webkit-scrollbar {
+  height: 8px;
+}
+.table-wrap::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.table-wrap::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+.table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  min-width: 1200px;
+  min-width: 1620px;
   table-layout: auto;
   border: 1px solid var(--border-light);
 }
@@ -375,6 +400,7 @@ onMounted(() => fetchData())
   font-size: 13px;
   color: var(--text-primary);
   height: 44px;
+  white-space: nowrap;
 }
 
 /* 交叉行颜色 - 仅应用于tbody，符合WCAG 2.1 AA标准 */
@@ -425,11 +451,40 @@ onMounted(() => fetchData())
 
 .user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
 
-.email-text { font-size: 13px; color: var(--text-secondary); }
+.email-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: inline-block;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 
-.nick-text { font-size: 13px; color: var(--text-primary); }
+.nick-text {
+  font-size: 13px;
+  color: var(--text-primary);
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 
-.dept-text { font-size: 13px; color: var(--text-secondary); }
+.count-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+
+.dept-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 
 /* ===== 标签 ===== */
 .tag {
@@ -470,15 +525,46 @@ onMounted(() => fetchData())
 .status-off .status-dot { background: var(--c-red); }
 .status-off { color: var(--c-red); }
 
-.time { font-size: 12px; color: var(--text-secondary); }
+.time {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
 
 /* ===== 操作列固定 ===== */
+/* 表头操作列固定 */
+.actions-header {
+  width: 250px;
+  text-align: center;
+  position: sticky;
+  right: 0;
+  background: var(--bg-header);
+  z-index: 10;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 表体操作列固定 */
 .actions-cell {
   position: sticky;
   right: 0;
   background: #fff;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
-  z-index: 1;
+  z-index: 5;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 偶数行操作列背景色 */
+.table tbody tr:nth-child(even) .actions-cell {
+  background: #FAFAFA;
+}
+
+/* 悬停时操作列背景色 */
+.table tbody tr:hover .actions-cell {
+  background: #E8F4FD !important;
 }
 
 /* ===== 操作按钮 ===== */

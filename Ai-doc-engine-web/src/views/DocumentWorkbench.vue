@@ -32,7 +32,10 @@
             注册
           </el-button>
         </div>
-        <UserMenu v-else />
+        <template v-else>
+          <AnnouncementBell :unread-count="announcementUnreadCount" @click="showAnnouncementModal = true" />
+          <UserMenu />
+        </template>
       </div>
     </header>
 
@@ -361,6 +364,12 @@
     <el-dialog v-model="showForgotDialog" title="忘记密码" width="450px" :close-on-click-modal="false" class="custom-dialog">
       <ForgotPasswordForm @success="handleForgotSuccess" @switch-to-login="switchToLogin" />
     </el-dialog>
+
+    <!-- 公告弹窗 -->
+    <AnnouncementModal 
+      v-model="showAnnouncementModal" 
+      @update:unread-count="announcementUnreadCount = $event" 
+    />
   </div>
 </template>
 
@@ -381,6 +390,8 @@ import UserMenu from '@/components/auth/UserMenu.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm.vue'
+import AnnouncementBell from '@/components/announcement/AnnouncementBell.vue'
+import AnnouncementModal from '@/components/announcement/AnnouncementModal.vue'
 import FormulaLatexEditor from '@/components/formula/FormulaLatexEditor.vue'
 import FormulaPreview from '@/components/formula/FormulaPreview.vue'
 import FormulaImageUpload from '@/components/formula/FormulaImageUpload.vue'
@@ -546,7 +557,9 @@ const showLoginDialog = ref(false)
 const showRegisterDialog = ref(false)
 const showForgotDialog = ref(false)
 const showExportDialog = ref(false)
+const showAnnouncementModal = ref(false)
 const exportFileName = ref('')
+const announcementUnreadCount = ref(0)
 
 // 用于强制重新创建组件的 key
 const tableEditorKey = ref(0)

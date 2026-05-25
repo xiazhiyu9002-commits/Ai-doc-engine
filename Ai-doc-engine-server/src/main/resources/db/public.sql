@@ -12,7 +12,7 @@
  Target Server Version : 170009 (170009)
  File Encoding         : 65001
 
- Date: 24/05/2026 18:13:17
+ Date: 25/05/2026 15:24:16
 */
 
 
@@ -246,7 +246,7 @@ INSERT INTO "public"."doc_template" VALUES (5, 10, '求职个人模板', '适用
 INSERT INTO "public"."doc_template" VALUES (6, 10, '技术研发模板', '适用于技术文档、API文档、用户手册、开发文档、测试报告', 'system', '{"fontSettings": {"fontSize": 12, "fontFamily": "宋体", "codeFontSize": 10, "headingFonts": {"h1": {"bold": true, "size": 20, "family": "黑体"}, "h2": {"bold": true, "size": 16, "family": "黑体"}, "h3": {"bold": true, "size": 14, "family": "黑体"}, "h4": {"bold": true, "size": 12, "family": "黑体"}, "h5": {"bold": true, "size": 12, "family": "黑体"}, "h6": {"bold": false, "size": 12, "family": "黑体"}}, "codeFontFamily": "Consolas"}, "pageSettings": {"margins": {"top": 2.5, "left": 2.5, "right": 2.5, "bottom": 2.5, "gutter": 0}, "pageSize": "A4", "orientation": "portrait"}, "paragraphSettings": {"alignment": "left", "lineSpacing": 1.5, "firstLineIndent": 2, "paragraphSpacing": {"after": 0, "before": 0}}, "headerFooterSettings": {"footer": "第 {page} 页，共 {total} 页", "header": "技术文档名称 | 版本号：V1.0", "footerHeight": 1.2, "headerHeight": 1.2, "oddEvenDifferent": false, "firstPageDifferent": false}}', 'f', 't', 0, '2026-04-20 23:09:14+08', '2026-04-20 23:09:14+08');
 INSERT INTO "public"."doc_template" VALUES (7, 10, '媒体宣传模板', '适用于新闻稿、宣传文案、演讲稿、发言稿、活动策划案', 'system', '{"fontSettings": {"fontSize": 12, "fontFamily": "微软雅黑", "codeFontSize": 10, "headingFonts": {"h1": {"bold": true, "size": 22, "family": "微软雅黑"}, "h2": {"bold": true, "size": 16, "family": "微软雅黑"}, "h3": {"bold": true, "size": 14, "family": "微软雅黑"}, "h4": {"bold": true, "size": 12, "family": "微软雅黑"}, "h5": {"bold": true, "size": 12, "family": "微软雅黑"}, "h6": {"bold": false, "size": 12, "family": "微软雅黑"}}, "codeFontFamily": "Consolas"}, "pageSettings": {"margins": {"top": 2.5, "left": 2.5, "right": 2.5, "bottom": 2.5, "gutter": 0}, "pageSize": "A4", "orientation": "portrait"}, "paragraphSettings": {"alignment": "left", "lineSpacing": 1.5, "firstLineIndent": 2, "paragraphSpacing": {"after": 6, "before": 6}}, "headerFooterSettings": {"footer": "第 {page} 页，共 {total} 页", "header": "宣传主题", "footerHeight": 1.5, "headerHeight": 1.5, "oddEvenDifferent": false, "firstPageDifferent": true}}', 'f', 't', 0, '2026-04-20 23:09:14+08', '2026-04-20 23:09:14+08');
 INSERT INTO "public"."doc_template" VALUES (8, 10, '日常通用模板', '适用于个人总结、读书笔记、邮件、便签、通知类小文件', 'system', '{"fontSettings": {"fontSize": 12, "fontFamily": "宋体", "codeFontSize": 10, "headingFonts": {"h1": {"bold": true, "size": 18, "family": "黑体"}, "h2": {"bold": true, "size": 16, "family": "黑体"}, "h3": {"bold": true, "size": 14, "family": "黑体"}, "h4": {"bold": true, "size": 12, "family": "黑体"}, "h5": {"bold": true, "size": 12, "family": "黑体"}, "h6": {"bold": false, "size": 12, "family": "黑体"}}, "codeFontFamily": "Consolas"}, "pageSettings": {"margins": {"top": 2.0, "left": 2.0, "right": 2.0, "bottom": 2.0, "gutter": 0}, "pageSize": "A4", "orientation": "portrait"}, "paragraphSettings": {"alignment": "left", "lineSpacing": 1.25, "firstLineIndent": 2, "paragraphSpacing": {"after": 0, "before": 0}}, "headerFooterSettings": {"footer": "第 {page} 页，共 {total} 页", "header": "", "footerHeight": 1.0, "headerHeight": 1.0, "oddEvenDifferent": false, "firstPageDifferent": false}}', 't', 't', 0, '2026-04-20 23:09:14+08', '2026-04-20 23:09:14+08');
-INSERT INTO "public"."doc_template" VALUES (2, 10, '行政公文模板', '适用于通知、公告、函、请示、报告、会议纪要、规章制度', 'system', '{"fontSettings": {"fontSize": 16, "fontFamily": "仿宋_GB2312", "codeFontSize": 10, "headingFonts": {"h1": {"bold": true, "size": 22, "family": "小标宋体"}, "h2": {"bold": true, "size": 18, "family": "仿宋_GB2312"}, "h3": {"bold": true, "size": 16, "family": "仿宋_GB2312"}, "h4": {"bold": true, "size": 16, "family": "仿宋_GB2312"}, "h5": {"bold": false, "size": 16, "family": "仿宋_GB2312"}, "h6": {"bold": false, "size": 16, "family": "仿宋_GB2312"}}, "codeFontFamily": "Consolas"}, "pageSettings": {"margins": {"top": 3.7, "left": 2.8, "right": 2.6, "bottom": 3.5, "gutter": 0}, "pageSize": "A4", "orientation": "portrait"}, "paragraphSettings": {"alignment": "left", "lineSpacing": 28, "firstLineIndent": 2, "paragraphSpacing": {"after": 0, "before": 0}}, "headerFooterSettings": {"footer": "第 {page} 页", "header": "", "footerHeight": 1.5, "headerHeight": 1.5, "oddEvenDifferent": false, "firstPageDifferent": false}}', 'f', 't', 1, '2026-04-20 23:09:14+08', '2026-05-23 19:52:08.097266+08');
+INSERT INTO "public"."doc_template" VALUES (10, 10, '三安光电上下班', '是广大妇女', 'custom', '{"fontSettings": {"fontSize": 12, "fontFamily": "宋体", "codeFontSize": 10, "headingFonts": {"h1": {"bold": true, "size": 22, "family": "黑体"}, "h2": {"bold": true, "size": 18, "family": "黑体"}, "h3": {"bold": true, "size": 16, "family": "黑体"}, "h4": {"bold": true, "size": 14, "family": "黑体"}, "h5": null, "h6": null}, "codeFontFamily": "Times New Roman"}, "pageSettings": {"margins": {"top": 2.5, "left": 2.8, "right": 2.5, "bottom": 2.5, "gutter": 0.5}, "pageSize": "A4", "orientation": "portrait"}, "paragraphSettings": {"alignment": "left", "lineSpacing": 1.5, "firstLineIndent": 2, "paragraphSpacing": {"after": 0, "before": 0}}, "headerFooterSettings": {"footer": "第 {page} 页，共 {total} 页", "header": "", "footerHeight": 1.5, "headerHeight": 1.5, "oddEvenDifferent": false, "firstPageDifferent": true}}', 'f', 'f', 0, '2026-05-25 13:09:12.75629+08', '2026-05-25 13:18:30.605903+08');
 
 -- ----------------------------
 -- Table structure for formula_ocr_record
@@ -310,7 +310,16 @@ COMMENT ON TABLE "public"."sys_announcement" IS '系统公告表';
 -- ----------------------------
 -- Records of sys_announcement
 -- ----------------------------
-INSERT INTO "public"."sys_announcement" VALUES (2, '欢迎使用AI文档转换引擎', 'AI文档转换引擎已正式上线，支持Markdown转换为Word文档，支持数学公式、化学公式等多种公式类型。', 'notice', 't', '2026-05-23 19:59:34.307441+08', NULL, 10, '2026-05-23 19:59:34.307441+08', '2026-05-23 19:59:34.307441+08', NULL);
+INSERT INTO "public"."sys_announcement" VALUES (2, '欢迎使用AI文档转换引擎', '各学院、部门：
+为进一步便利教师科研工作、助力学生高效学习，切实解决办公场景中 AI 公式 Markdown 文档转换难题，实现数学公式原生编辑、流程图专业渲染及复杂表格完美兼容，我校正式上线 AI Doc Engine 系统。
+该系统由数学与大数据学院牵头，依托贵州省人工智能与内脑计算全省重点实验室的技术支撑及教育网络中心的算力保障联合打造，是一款专注于 AI 公式 Markdown 智能转换 Word 的文档处理工具。系统核心支持 Markdown 标准语法解析、结构化无损转换与 Word 原生导出，适配多学科 LaTeX 公式，具备公式 OCR 识别、实时预览校验及 Mermaid 流程图渲染功能，同时提供样式模板配置与完善的用户安全管理机制，可快速完成 Markdown 文档至 Word 文件的高质量转换导出。后续将持续迭代升级，推进流程图原生矢量化、多人协作编辑及 AI 智能增强等功能，更好服务教学科研需求。
+
+
+特此通知。
+教育网络中心
+数学与大数据学院
+教务处
+2026年5月20日', 'notice', 't', '2026-05-23 19:59:34.307441+08', NULL, 10, '2026-05-23 19:59:34.307441+08', '2026-05-25 14:51:07.856469+08', NULL);
 
 -- ----------------------------
 -- Table structure for sys_login_log
@@ -345,8 +354,10 @@ COMMENT ON TABLE "public"."sys_login_log" IS '登录日志表';
 INSERT INTO "public"."sys_login_log" VALUES (95, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 18:32:18.183097+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (97, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 11:20:01.14672+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (99, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 16:10:15.560686+08', 'Chrome');
+INSERT INTO "public"."sys_login_log" VALUES (100, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-25 12:40:49.223024+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (96, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 19:26:28.692433+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (98, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-24 12:49:13.088928+08', 'Chrome');
+INSERT INTO "public"."sys_login_log" VALUES (101, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-25 14:49:48.74183+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (92, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-20 21:10:44.925355+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (93, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 15:53:26.90958+08', 'Chrome');
 INSERT INTO "public"."sys_login_log" VALUES (94, 10, 'admin', 'success', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', NULL, '2026-05-23 16:06:29.158246+08', 'Chrome');
@@ -398,7 +409,9 @@ CREATE TABLE "public"."sys_user" (
   "last_login_ip" varchar(64) COLLATE "pg_catalog"."default",
   "created_at" timestamptz(6) NOT NULL DEFAULT now(),
   "updated_at" timestamptz(6) NOT NULL DEFAULT now(),
-  "department" varchar(100) COLLATE "pg_catalog"."default"
+  "department" varchar(100) COLLATE "pg_catalog"."default",
+  "ocr_count" int4 NOT NULL DEFAULT 0,
+  "export_count" int4 NOT NULL DEFAULT 0
 )
 ;
 COMMENT ON COLUMN "public"."sys_user"."id" IS '主键ID';
@@ -414,13 +427,15 @@ COMMENT ON COLUMN "public"."sys_user"."last_login_ip" IS '最后登录IP';
 COMMENT ON COLUMN "public"."sys_user"."created_at" IS '创建时间';
 COMMENT ON COLUMN "public"."sys_user"."updated_at" IS '更新时间';
 COMMENT ON COLUMN "public"."sys_user"."department" IS '部门';
+COMMENT ON COLUMN "public"."sys_user"."ocr_count" IS 'OCR使用次数';
+COMMENT ON COLUMN "public"."sys_user"."export_count" IS '导出次数';
 COMMENT ON TABLE "public"."sys_user" IS '用户表';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO "public"."sys_user" VALUES (10, 'admin', 'admin@example.com', '$2a$10$/XncWou71LX0GNvns8f40u9HASfhDMc1bTjPv0Eg/gjN6lUVDwGLC', '管理员', '/uploads/avatar/81ecc46f-bf27-42bf-bae9-ac23d8f51e4e.jpg', 'ADMIN', 'active', '2026-05-24 16:10:15.552189+08', '127.0.0.1', '2026-05-20 20:49:28.213873+08', '2026-05-24 16:10:15.224894+08', '数学与大数据学院');
-INSERT INTO "public"."sys_user" VALUES (11, 'lyj3401456945', '3401456945@qq.com', '$2a$10$jvljLvGCSt2WHt4pU5cFvuL0HhBODxUiwl8qsk0VUOVCmR5jlVQjG', '哈哈', '', 'USER', 'active', NULL, NULL, '2026-05-24 12:36:38.511338+08', '2026-05-24 12:48:58.889554+08', '数学与大数据学院');
+INSERT INTO "public"."sys_user" VALUES (10, 'admin', 'admin@example.com', '$2a$10$/XncWou71LX0GNvns8f40u9HASfhDMc1bTjPv0Eg/gjN6lUVDwGLC', '管理员', '/uploads/avatar/81ecc46f-bf27-42bf-bae9-ac23d8f51e4e.jpg', 'ADMIN', 'active', '2026-05-25 14:49:48.733935+08', '127.0.0.1', '2026-05-20 20:49:28.213873+08', '2026-05-25 14:49:48.401925+08', '数学与大数据学院', 0, 0);
+INSERT INTO "public"."sys_user" VALUES (11, 'lyj3401456945', '3401456945@qq.com', '$2a$10$jvljLvGCSt2WHt4pU5cFvuL0HhBODxUiwl8qsk0VUOVCmR5jlVQjG', '哈哈', '', 'USER', 'active', NULL, NULL, '2026-05-24 12:36:38.511338+08', '2026-05-24 12:48:58.889554+08', '数学与大数据学院', 0, 0);
 
 -- ----------------------------
 -- Table structure for user_feedback
@@ -455,7 +470,7 @@ COMMENT ON TABLE "public"."user_feedback" IS '用户反馈表';
 -- Records of user_feedback
 -- ----------------------------
 INSERT INTO "public"."user_feedback" VALUES (2, 10, '系统运行稳定，文档转换速度快，非常好用！', 'suggestion', 'resolved', 'normal', NULL, 10, '2026-05-23 19:59:34.302082+08', '2026-05-23 20:05:26.768074+08');
-INSERT INTO "public"."user_feedback" VALUES (3, 10, '哈哈，系统运行稳定，文档转换速度快，非常好用！', 'other', 'pending', 'normal', '{/uploads/feedback/3da761bf-aac2-4b58-86ca-0f31b81b0e0a.jpg,/uploads/feedback/66f83d2c-aa31-43ba-b0d7-b2255fa6e7c9.jpg}', NULL, '2026-05-24 12:14:32.033772+08', '2026-05-24 12:14:32.033772+08');
+INSERT INTO "public"."user_feedback" VALUES (3, 10, '哈哈，系统运行稳定，文档转换速度快，非常好用！', 'other', 'resolved', 'normal', '{/uploads/feedback/3da761bf-aac2-4b58-86ca-0f31b81b0e0a.jpg,/uploads/feedback/66f83d2c-aa31-43ba-b0d7-b2255fa6e7c9.jpg}', 10, '2026-05-24 12:14:32.033772+08', '2026-05-25 14:41:04.501298+08');
 
 -- ----------------------------
 -- Procedure structure for cleanup_expired_tokens
@@ -564,7 +579,7 @@ SELECT setval('"public"."doc_export_task_id_seq"', 2, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."doc_template_id_seq"
 OWNED BY "public"."doc_template"."id";
-SELECT setval('"public"."doc_template_id_seq"', 9, true);
+SELECT setval('"public"."doc_template_id_seq"', 10, true);
 
 -- ----------------------------
 -- Alter sequences owned by
@@ -583,7 +598,7 @@ SELECT setval('"public"."sys_announcement_id_seq"', 2, true);
 -- ----------------------------
 ALTER SEQUENCE "public"."sys_login_log_id_seq"
 OWNED BY "public"."sys_login_log"."id";
-SELECT setval('"public"."sys_login_log_id_seq"', 99, true);
+SELECT setval('"public"."sys_login_log_id_seq"', 101, true);
 
 -- ----------------------------
 -- Alter sequences owned by

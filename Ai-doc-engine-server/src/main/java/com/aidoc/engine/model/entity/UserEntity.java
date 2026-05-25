@@ -54,6 +54,14 @@ public class UserEntity {
     @Column(name = "last_login_ip", length = 64)
     private String lastLoginIp;
     
+    @Column(name = "ocr_count", nullable = false)
+    @Builder.Default
+    private Integer ocrCount = 0;
+    
+    @Column(name = "export_count", nullable = false)
+    @Builder.Default
+    private Integer exportCount = 0;
+    
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
