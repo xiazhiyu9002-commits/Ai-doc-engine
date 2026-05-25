@@ -1,0 +1,209 @@
+这里给你整理**从基础到深度学习全覆盖**的机器学习公式、符号、格式，简单+复杂全都有，直接复制就能用。
+
+# 一、基础符号体系
+- 样本：$x = (x_1, x_2, \dots, x_d)^\top$
+- 标签：$y$
+- 数据集：$D = \{(x_1,y_1),\dots,(x_m,y_m)\}$
+- 样本数：$m$
+- 特征维度：$d$
+- 权重向量：$w = (w_1,\dots,w_d)^\top$
+- 偏置：$b$
+- 预测值：$\hat{y}$
+
+# 二、线性模型
+## 1. 线性回归
+\[
+\hat{y} = w^\top x + b
+\]
+
+## 2. 均方误差 MSE（损失函数）
+\[
+L(w,b) = \frac1m\sum_{i=1}^m \big(\hat{y}_i - y_i\big)^2
+\]
+
+## 3. 代价函数（带1/2）
+\[
+J(w,b) = \frac{1}{2m}\sum_{i=1}^m \big(w^\top x_i + b - y_i\big)^2
+\]
+
+## 4. 逻辑回归（分类）
+Sigmoid：
+\[
+\sigma(z) = \frac{1}{1+e^{-z}},\quad z=w^\top x+b
+\]
+
+对数似然损失：
+\[
+L = -\frac1m\sum_{i=1}^m \Big(y_i\ln\hat{y}_i + (1-y_i)\ln(1-\hat{y}_i)\Big)
+\]
+
+# 三、正则化
+## 1. L1 正则（Lasso）
+\[
+J = J_0 + \lambda\|w\|_1
+\]
+
+## 2. L2 正则（Ridge）
+\[
+J = J_0 + \lambda\|w\|_2^2
+\]
+
+## 3. 弹性网
+\[
+J = J_0 + \lambda_1\|w\|_1 + \lambda_2\|w\|_2^2
+\]
+
+# 四、决策树与集成
+## 1. 信息熵
+\[
+Ent(D) = -\sum_{k=1}^K p_k\log_2 p_k
+\]
+
+## 2. 信息增益
+\[
+Gain(D,a) = Ent(D) - \sum_{v=1}^V \frac{|D^v|}{|D|}Ent(D^v)
+\]
+
+## 3. 基尼系数
+\[
+Gini(D) = 1-\sum_{k=1}^K p_k^2
+\]
+
+## 4. 随机森林 / 梯度提升
+- 袋装：平均
+- 提升：加权累加
+\[
+F(x) = \sum_{t=1}^T f_t(x)
+\]
+
+# 五、支持向量机 SVM
+## 1. 最大间隔
+\[
+\max \frac{2}{\|w\|}
+\]
+
+## 2. 约束
+\[
+y_i(w^\top x_i + b) \ge 1
+\]
+
+## 3. 对偶 & 核函数
+\[
+K(x_i,x_j) = \phi(x_i)^\top\phi(x_j)
+\]
+常用：
+- 线性核：$x_i^\top x_j$
+- 高斯核 RBF：$e^{-\gamma\|x_i-x_j\|^2}$
+
+# 六、聚类（无监督）
+## K-Means
+\[
+J = \sum_{i=1}^m \sum_{k=1}^K \gamma_{ik}\|x_i - \mu_k\|^2
+\]
+
+# 七、降维
+## PCA 方差最大化
+\[
+\max \frac1m\sum_{i=1}^m (w^\top x_i)^2,\quad \|w\|=1
+\]
+
+# 八、神经网络 & 深度学习
+## 1. 前向传播
+\[
+z = Wx + b,\quad a = \sigma(z)
+\]
+
+## 2. 常用激活函数
+- ReLU：
+\[
+a = \max(0,z)
+\]
+- Tanh：
+\[
+\tanh(z) = \frac{e^z-e^{-z}}{e^z+e^{-z}}
+\]
+- LeakyReLU：
+\[
+a = \max(\alpha z,z)
+\]
+
+## 3. 损失函数
+- 均方误差：
+\[
+L = \frac1m\sum\|\hat y - y\|^2
+\]
+- 交叉熵（多分类）：
+\[
+L = -\frac1m\sum_{i=1}^m\sum_{k=1}^K y_{ik}\ln\hat y_{ik}
+\]
+
+## 4. 反向传播（梯度下降）
+\[
+w := w - \eta \frac{\partial J}{\partial w}
+\]
+
+## 5. 批量梯度下降 BGD / SGD / Adam
+统一形式：
+\[
+\theta_{t+1} = \theta_t - \eta \cdot g_t
+\]
+
+# 九、卷积神经网络 CNN
+- 卷积：
+\[
+(i,j) = \sum_{m}\sum_{n} x_{i+m,j+n} \cdot w_{m,n}
+\]
+- 池化：最大池化、平均池化
+- 感受野、步长 stride、填充 padding
+
+# 十、循环神经网络 RNN
+\[
+h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+\]
+LSTM、GRU 门控结构
+
+# 十一、评价指标
+## 1. 准确率
+\[
+Acc = \frac{TP+TN}{TP+TN+FP+FN}
+\]
+
+## 2. 精确率、召回率、F1
+\[
+P = \frac{TP}{TP+FP},\quad R=\frac{TP}{TP+FN}
+\]
+\[
+F1 = \frac{2PR}{P+R}
+\]
+
+## 3. AUC & ROC
+
+# 十二、高级公式（硬核）
+## 1. 信息熵
+\[
+H(Y) = -\sum p(y)\log p(y)
+\]
+
+## 2. 贝叶斯公式
+\[
+P(Y|X) = \frac{P(X|Y)P(Y)}{P(X)}
+\]
+
+## 3. 极大似然估计 MLE
+\[
+\hat\theta = \arg\max_\theta \prod p(x_i;\theta)
+\]
+
+## 4. 高斯分布
+\[
+\mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\]
+
+## 5. 泛化误差上界 / VC 维
+\[
+E(g) \le E_{train}(g) + \Omega(N,VC,\delta)
+\]
+
+如果你需要，我可以把
+**数学+物理+化学+计算机+机器学习**
+合成一份**超级完整公式大合集**，排版干净可直接打印。

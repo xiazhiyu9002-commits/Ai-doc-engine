@@ -1,0 +1,104 @@
+给你整理**从小学到大学全覆盖**的数学公式格式，简单复杂全都有，直接复制就能用。
+
+# 一、小学基础
+- 加法交换律：$a+b=b+a$
+- 乘法交换律：$ab=ba$
+- 长方形面积：$S=ab$
+- 正方形面积：$S=a^2$
+- 三角形面积：$S=\dfrac12ah$
+- 梯形面积：$S=\dfrac12(a+b)h$
+- 圆周长：$C=2\pi r$
+- 圆面积：$S=\pi r^2$
+
+# 二、初中数学
+## 代数
+- 完全平方：$(a\pm b)^2=a^2\pm2ab+b^2$
+- 平方差：$a^2-b^2=(a+b)(a-b)$
+- 立方和差：
+  $a^3\pm b^3=(a\pm b)(a^2\mp ab+b^2)$
+- 一元二次方程求根：
+  $x=\dfrac{-b\pm\sqrt{b^2-4ac}}{2a}$
+- 韦达定理：$x_1+x_2=-\dfrac ba,\ x_1x_2=\dfrac ca$
+
+## 几何
+- 勾股定理：$a^2+b^2=c^2$
+- 相似三角形：$\dfrac{a}{a'}=\dfrac{b}{b'}=\dfrac{c}{c'}$
+- 三角函数定义：
+  $\sin\alpha=\dfrac{\text{对}}{\text{斜}},\ \cos\alpha=\dfrac{\text{邻}}{\text{斜}},\ \tan\alpha=\dfrac{\text{对}}{\text{邻}}$
+
+# 三、高中数学
+## 函数
+- 指数：$a^m\cdot a^n=a^{m+n},\ \dfrac{a^m}{a^n}=a^{m-n}$
+- 对数：$\log_a MN=\log_a M+\log_a N$
+- 换底公式：$\log_a b=\dfrac{\ln b}{\ln a}$
+
+## 三角函数
+- $\sin^2\alpha+\cos^2\alpha=1$
+- 和角公式：
+  $\sin(\alpha\pm\beta)=\sin\alpha\cos\beta\pm\cos\alpha\sin\beta$
+  $\cos(\alpha\pm\beta)=\cos\alpha\cos\beta\mp\sin\alpha\sin\beta$
+- 二倍角：
+  $\sin2\alpha=2\sin\alpha\cos\alpha$
+  $\cos2\alpha=\cos^2\alpha-\sin^2\alpha$
+
+## 数列
+- 等差：$a_n=a_1+(n-1)d,\ S_n=\dfrac{n(a_1+a_n)}{2}$
+- 等比：$a_n=a_1q^{n-1},\ S_n=\dfrac{a_1(1-q^n)}{1-q}$
+
+## 向量、解析几何
+- 向量模长：$|\vec a|=\sqrt{x^2+y^2}$
+- 点积：$\vec a\cdot\vec b=|\vec a||\vec b|\cos\theta$
+- 两点距离：$d=\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$
+- 直线：$y=kx+b$
+- 圆：$(x-a)^2+(y-b)^2=r^2$
+
+## 不等式
+- 均值：$\dfrac{a+b}{2}\ge\sqrt{ab}$
+- 柯西：$(a^2+b^2)(c^2+d^2)\ge(ac+bd)^2$
+
+# 四、高等数学（大学）
+## 极限
+- $\lim\limits_{x\to0}\dfrac{\sin x}{x}=1$
+- $\lim\limits_{x\to\infty}\left(1+\dfrac1x\right)^x=e$
+
+## 导数
+- $(x^n)'=nx^{n-1}$
+- $(\sin x)'=\cos x,\ (\cos x)'=-\sin x$
+- $(\ln x)'=\dfrac1x,\ (e^x)'=e^x$
+- 链式法则：$\dfrac{dy}{dx}=\dfrac{dy}{du}\cdot\dfrac{du}{dx}$
+
+## 积分
+- $\displaystyle\int x^n dx=\dfrac{x^{n+1}}{n+1}+C$
+- $\displaystyle\int\sin x dx=-\cos x+C$
+- $\displaystyle\int\dfrac1x dx=\ln|x|+C$
+- 牛顿-莱布尼茨：$\displaystyle\int_a^b f(x)dx=F(b)-F(a)$
+
+## 多元微积分
+- 梯度：$\nabla f=\left(\dfrac{\partial f}{\partial x},\dfrac{\partial f}{\partial y}\right)$
+- 全微分：$dz=\dfrac{\partial z}{\partial x}dx+\dfrac{\partial z}{\partial y}dy$
+
+## 级数
+- 泰勒展开：
+  $f(x)=\sum\limits_{n=0}^\infty\dfrac{f^{(n)}(a)}{n!}(x-a)^n$
+- 等比级数：$\sum\limits_{n=0}^\infty q^n=\dfrac{1}{1-q}\ (|q|<1)$
+
+## 线性代数
+- 行列式：$\begin{vmatrix}a&b\\c&d\end{vmatrix}=ad-bc$
+- 矩阵乘法：$AB=C$
+- 特征值：$Ax=\lambda x$
+- 正交：$A^TA=E$
+
+## 概率统计
+- 期望：$E(X)=\sum x_ip_i$
+- 方差：$D(X)=E(X^2)-[E(X)]^2$
+- 正态分布：
+  $f(x)=\dfrac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
+
+# 五、更复杂的公式（装X专用）
+- 欧拉恒等式：$e^{i\pi}+1=0$
+- 斯托克斯公式：$\displaystyle\oint_{\partial\Sigma}\vec F\cdot d\vec r=\iint_\Sigma(\nabla\times\vec F)\cdot d\vec S$
+- 高斯公式：$\displaystyle\oiint_{\partial\Omega}\vec F\cdot d\vec S=\iiint_\Omega\nabla\cdot\vec F\,dV$
+- 傅里叶变换：$\hat f(\omega)=\displaystyle\int_{-\infty}^\infty f(x)e^{-i\omega x}dx$
+- 拉普拉斯变换：$\mathcal L[f]=\displaystyle\int_0^\infty f(t)e^{-st}dt$
+
+你要我帮你把**化学 + 物理 + 数学**所有公式合成一份完整可打印版吗？

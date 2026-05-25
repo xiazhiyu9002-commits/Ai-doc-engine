@@ -1,0 +1,439 @@
+我来为您整理一份全面的大学数学及理工科核心公式手册。这是一个庞大的知识体系，我将按照学科分类，涵盖从基础数学到高级应用的复杂公式。
+
+---
+
+## 一、高等数学（微积分）
+
+### 1. 极限与连续
+
+**重要极限**
+$$\lim_{x \to 0} \frac{\sin x}{x} = 1, \quad \lim_{x \to 0} (1+x)^{\frac{1}{x}} = e, \quad \lim_{x \to \infty} \left(1+\frac{1}{x}\right)^x = e$$
+
+**Stolz-Cesàro 定理**（数列极限的洛必达法则）
+$$\lim_{n \to \infty} \frac{a_n}{b_n} = \lim_{n \to \infty} \frac{a_{n+1}-a_n}{b_{n+1}-b_n}$$
+
+### 2. 微分学
+
+**高阶导数莱布尼茨公式**
+$$(uv)^{(n)} = \sum_{k=0}^{n} C_n^k u^{(n-k)} v^{(k)}$$
+
+**泰勒展开（带拉格朗日余项）**
+$$f(x) = \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k + \frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}$$
+
+**多元泰勒展开**
+$$f(\mathbf{x}) = f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^T(\mathbf{x}-\mathbf{x}_0) + \frac{1}{2}(\mathbf{x}-\mathbf{x}_0)^T H(\mathbf{x}_0)(\mathbf{x}-\mathbf{x}_0) + O(\|\mathbf{x}-\mathbf{x}_0\|^3)$$
+
+其中 $H$ 为Hessian矩阵：$H_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}$
+
+**隐函数存在定理**
+若 $F(x,y)$ 满足 $F(x_0,y_0)=0$，$F_y(x_0,y_0) \neq 0$，则
+$$\frac{dy}{dx} = -\frac{F_x}{F_y}$$
+
+### 3. 积分学
+
+**欧拉-泊松积分（高斯积分）**
+$$\int_{-\infty}^{+\infty} e^{-x^2} dx = \sqrt{\pi}, \quad \int_{0}^{+\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$
+
+**Gamma函数**
+$$\Gamma(z) = \int_0^{\infty} t^{z-1}e^{-t}dt, \quad \Gamma(n+1)=n!, \quad \Gamma(z)\Gamma(1-z)=\frac{\pi}{\sin(\pi z)}$$
+
+**Beta函数**
+$$B(x,y) = \int_0^1 t^{x-1}(1-t)^{y-1}dt = \frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}$$
+
+**Fresnel积分**
+$$\int_0^{\infty} \sin(x^2)dx = \int_0^{\infty} \cos(x^2)dx = \frac{1}{2}\sqrt{\frac{\pi}{2}}$$
+
+**Dirichlet积分**
+$$\int_0^{\infty} \frac{\sin x}{x}dx = \frac{\pi}{2}$$
+
+**重积分变量替换**
+$$\iint_D f(x,y)dxdy = \iint_{D'} f(x(u,v),y(u,v)) |J| dudv$$
+
+其中 $J = \frac{\partial(x,y)}{\partial(u,v)} = \begin{vmatrix} \frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\ \frac{\partial y}{\partial u} & \frac{\partial y}{\partial v} \end{vmatrix}$
+
+**曲线积分（格林公式）**
+$$\oint_L Pdx + Qdy = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dxdy$$
+
+**曲面积分（高斯公式/散度定理）**
+$$\oiint_{\Sigma} \mathbf{F} \cdot d\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) dV$$
+
+**斯托克斯公式**
+$$\oint_L \mathbf{F} \cdot d\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot d\mathbf{S}$$
+
+### 4. 级数
+
+**傅里叶级数**
+$$f(x) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\left(a_n\cos\frac{n\pi x}{l} + b_n\sin\frac{n\pi x}{l}\right)$$
+
+$$a_n = \frac{1}{l}\int_{-l}^{l} f(x)\cos\frac{n\pi x}{l}dx, \quad b_n = \frac{1}{l}\int_{-l}^{l} f(x)\sin\frac{n\pi x}{l}dx$$
+
+**Parseval等式**
+$$\frac{1}{l}\int_{-l}^{l} |f(x)|^2 dx = \frac{a_0^2}{2} + \sum_{n=1}^{\infty}(a_n^2 + b_n^2)$$
+
+---
+
+## 二、线性代数
+
+### 1. 矩阵运算
+
+**矩阵指数**
+$$e^A = \sum_{k=0}^{\infty} \frac{A^k}{k!}, \quad \det(e^A) = e^{\text{tr}(A)}$$
+
+**Sylvester方程**
+$$AX + XB = C$$
+
+**Kronecker积性质**
+$$(A \otimes B)(C \otimes D) = (AC) \otimes (BD)$$
+$$\text{vec}(AXB) = (B^T \otimes A)\text{vec}(X)$$
+
+### 2. 特征值与特征向量
+
+**特征值扰动理论**
+设 $A$ 有特征值 $\lambda$ 和特征向量 $\mathbf{v}$，扰动后 $A+\Delta A$ 的特征值变化：
+$$\Delta \lambda \approx \frac{\mathbf{v}^T \Delta A \mathbf{v}}{\mathbf{v}^T \mathbf{v}}$$
+
+**Courant-Fischer极小极大定理**
+$$\lambda_k = \min_{\dim(S)=k} \max_{\mathbf{x} \in S, \mathbf{x} \neq 0} \frac{\mathbf{x}^T A \mathbf{x}}{\mathbf{x}^T \mathbf{x}}$$
+
+**Gershgorin圆盘定理**
+特征值 $\lambda$ 满足：$|\lambda - a_{ii}| \leq \sum_{j \neq i} |a_{ij}|$
+
+### 3. 矩阵分解
+
+**奇异值分解（SVD）**
+$$A = U\Sigma V^T = \sum_{i=1}^{r} \sigma_i \mathbf{u}_i \mathbf{v}_i^T$$
+
+**伪逆（Moore-Penrose逆）**
+$$A^+ = V\Sigma^+ U^T = \sum_{i=1}^{r} \frac{1}{\sigma_i} \mathbf{v}_i \mathbf{u}_i^T$$
+
+**LU分解与Cholesky分解**
+$$A = LL^T \quad (\text{对正定矩阵})$$
+
+**QR分解**
+$$A = QR, \quad Q^TQ = I, \quad R \text{ 上三角}$$
+
+### 4. 二次型与正定矩阵
+
+**Rayleigh商**
+$$R(A, \mathbf{x}) = \frac{\mathbf{x}^T A \mathbf{x}}{\mathbf{x}^T \mathbf{x}}, \quad \lambda_{\min} \leq R(A, \mathbf{x}) \leq \lambda_{\max}$$
+
+**正定矩阵判定**
+- 所有特征值 > 0
+- 所有顺序主子式 > 0
+- 存在可逆 $L$ 使 $A = LL^T$
+
+### 5. 线性空间与变换
+
+**Jordan标准形**
+$$A = PJP^{-1}, \quad J = \text{diag}(J_1, J_2, \ldots, J_k)$$
+
+其中 Jordan块 $J_i = \begin{bmatrix} \lambda_i & 1 & & \\ & \lambda_i & \ddots & \\ & & \ddots & 1 \\ & & & \lambda_i \end{bmatrix}$
+
+**Cayley-Hamilton定理**
+矩阵满足其特征方程：$p(A) = 0$
+
+---
+
+## 三、概率论与数理统计
+
+### 1. 概率分布
+
+**多元正态分布**
+$$f(\mathbf{x}) = \frac{1}{(2\pi)^{n/2}|\Sigma|^{1/2}} \exp\left(-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^T\Sigma^{-1}(\mathbf{x}-\boldsymbol{\mu})\right)$$
+
+**特征函数**
+$$\varphi_X(t) = E[e^{itX}], \quad \varphi_{X+Y}(t) = \varphi_X(t)\varphi_Y(t) \text{ (独立时)}$$
+
+### 2. 极限定理
+
+**大数定律（强大数律）**
+$$P\left(\lim_{n \to \infty} \frac{1}{n}\sum_{i=1}^{n} X_i = E[X]\right) = 1$$
+
+**中心极限定理（Lindeberg-Lévy）**
+$$\frac{\sum_{i=1}^{n} X_i - n\mu}{\sigma\sqrt{n}} \xrightarrow{d} N(0,1)$$
+
+**Berry-Esseen定理**（中心极限定理收敛速度）
+$$\sup_x |F_n(x) - \Phi(x)| \leq \frac{C\rho}{\sigma^3\sqrt{n}}$$
+
+### 3. 统计推断
+
+**最大似然估计**
+$$\hat{\theta} = \arg\max_{\theta} L(\theta|\mathbf{x}) = \arg\max_{\theta} \prod_{i=1}^{n} f(x_i|\theta)$$
+
+**Cramér-Rao下界**
+$$\text{Var}(\hat{\theta}) \geq \frac{1}{nI(\theta)}, \quad I(\theta) = E\left[\left(\frac{\partial \ln f(X|\theta)}{\partial \theta}\right)^2\right]$$
+
+---
+
+## 四、复变函数
+
+### 1. 解析函数
+
+**柯西-黎曼条件**
+$$\frac{\partial u}{\partial x} = \frac{\partial v}{\partial y}, \quad \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}$$
+
+**柯西积分公式**
+$$f^{(n)}(z_0) = \frac{n!}{2\pi i} \oint_C \frac{f(z)}{(z-z_0)^{n+1}}dz$$
+
+**留数定理**
+$$\oint_C f(z)dz = 2\pi i \sum_{k=1}^{n} \text{Res}(f, z_k)$$
+
+**留数计算**
+- 一阶极点：$\text{Res}(f, z_0) = \lim_{z \to z_0} (z-z_0)f(z)$
+- $m$阶极点：$\text{Res}(f, z_0) = \frac{1}{(m-1)!}\lim_{z \to z_0} \frac{d^{m-1}}{dz^{m-1}}[(z-z_0)^m f(z)]$
+
+### 2. 积分变换
+
+**傅里叶变换**
+$$\hat{f}(\omega) = \int_{-\infty}^{\infty} f(x)e^{-i\omega x}dx, \quad f(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty} \hat{f}(\omega)e^{i\omega x}d\omega$$
+
+**卷积定理**
+$$\mathcal{F}(f * g) = \hat{f} \cdot \hat{g}, \quad \mathcal{F}(f \cdot g) = \frac{1}{2\pi}(\hat{f} * \hat{g})$$
+
+**拉普拉斯变换**
+$$\mathcal{L}\{f(t)\} = F(s) = \int_0^{\infty} f(t)e^{-st}dt$$
+
+**逆变换（Bromwich积分）**
+$$f(t) = \frac{1}{2\pi i} \int_{\gamma-i\infty}^{\gamma+i\infty} F(s)e^{st}ds$$
+
+---
+
+## 五、常微分方程（ODE）
+
+### 1. 一阶方程
+
+**恰当方程判定**
+$$Mdx + Ndy = 0 \text{ 恰当 } \Leftrightarrow \frac{\partial M}{\partial y} = \frac{\partial N}{\partial x}$$
+
+**积分因子**
+若 $\frac{M_y - N_x}{N} = \phi(x)$，则积分因子 $\mu(x) = e^{\int \phi(x)dx}$
+
+**Riccati方程**
+$$y' = P(x) + Q(x)y + R(x)y^2$$
+
+若已知特解 $y_1$，令 $y = y_1 + \frac{1}{u}$ 可化为线性方程。
+
+### 2. 高阶线性ODE
+
+**常系数齐次方程**
+$$y^{(n)} + a_1y^{(n-1)} + \cdots + a_ny = 0$$
+
+特征方程 $r^n + a_1r^{n-1} + \cdots + a_n = 0$ 的根决定通解形式。
+
+**参数变易法（Wronskian）**
+$$W(y_1, \ldots, y_n) = \begin{vmatrix} y_1 & \cdots & y_n \\ y_1' & \cdots & y_n' \\ \vdots & & \vdots \\ y_1^{(n-1)} & \cdots & y_n^{(n-1)} \end{vmatrix}$$
+
+特解：$y_p = \sum_{i=1}^{n} y_i \int \frac{W_i}{W}f(x)dx$
+
+### 3. 特殊函数
+
+**贝塞尔方程**
+$$x^2y'' + xy' + (x^2 - n^2)y = 0$$
+
+解为贝塞尔函数 $J_n(x)$ 和 $Y_n(x)$。
+
+**勒让德方程**
+$$(1-x^2)y'' - 2xy' + n(n+1)y = 0$$
+
+解为勒让德多项式 $P_n(x)$。
+
+**超几何方程**
+$$x(1-x)y'' + [c-(a+b+1)x]y' - aby = 0$$
+
+---
+
+## 六、偏微分方程（PDE）
+
+### 1. 波动方程
+
+**一维波动方程**
+$$\frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2}$$
+
+**d'Alembert公式**
+$$u(x,t) = \frac{f(x+ct) + f(x-ct)}{2} + \frac{1}{2c}\int_{x-ct}^{x+ct} g(s)ds$$
+
+### 2. 热传导方程
+
+**基本解（热核）**
+$$u(x,t) = \frac{1}{\sqrt{4\pi kt}} \int_{-\infty}^{\infty} e^{-\frac{(x-y)^2}{4kt}} f(y)dy$$
+
+### 3. 拉普拉斯方程
+
+**格林函数**
+$$\nabla^2 G(\mathbf{x}, \mathbf{x}') = -\delta(\mathbf{x} - \mathbf{x}')$$
+
+三维自由空间格林函数：$G = \frac{1}{4\pi|\mathbf{x}-\mathbf{x}'|}$
+
+**泊松积分公式（圆域）**
+$$u(r,\theta) = \frac{1}{2\pi} \int_0^{2\pi} \frac{R^2-r^2}{R^2-2Rr\cos(\theta-\phi)+r^2} f(\phi)d\phi$$
+
+### 4. 分离变量法
+
+**施图姆-刘维尔问题**
+$$\frac{d}{dx}\left[p(x)\frac{dy}{dx}\right] + [\lambda w(x) - q(x)]y = 0$$
+
+特征函数正交性：$\int_a^b y_n(x)y_m(x)w(x)dx = 0$（$n \neq m$）
+
+---
+
+## 七、机器学习数学基础
+
+### 1. 优化理论
+
+**梯度下降**
+$$\mathbf{x}_{k+1} = \mathbf{x}_k - \eta \nabla f(\mathbf{x}_k)$$
+
+**牛顿法**
+$$\mathbf{x}_{k+1} = \mathbf{x}_k - [\nabla^2 f(\mathbf{x}_k)]^{-1} \nabla f(\mathbf{x}_k)$$
+
+**拉格朗日对偶**
+$$\min_{\mathbf{x}} \max_{\boldsymbol{\lambda}} L(\mathbf{x}, \boldsymbol{\lambda}) = \max_{\boldsymbol{\lambda}} \min_{\mathbf{x}} L(\mathbf{x}, \boldsymbol{\lambda})$$
+
+**KKT条件**（最优性条件）
+1. $\nabla f(\mathbf{x}^*) + \sum \lambda_i \nabla g_i(\mathbf{x}^*) + \sum \mu_j \nabla h_j(\mathbf{x}^*) = 0$
+2. $g_i(\mathbf{x}^*) \leq 0, \quad h_j(\mathbf{x}^*) = 0$
+3. $\lambda_i \geq 0$
+4. $\lambda_i g_i(\mathbf{x}^*) = 0$（互补松弛）
+
+### 2. 概率图模型
+
+**贝叶斯定理**
+$$P(H|E) = \frac{P(E|H)P(H)}{P(E)}$$
+
+**高斯过程回归**
+$$f(\mathbf{x}) \sim \mathcal{GP}(m(\mathbf{x}), k(\mathbf{x}, \mathbf{x}'))$$
+
+后验预测：$p(\mathbf{f}_*|\mathbf{X}, \mathbf{y}, \mathbf{X}_*) = \mathcal{N}(\boldsymbol{\mu}_*, \boldsymbol{\Sigma}_*)$
+
+$$\boldsymbol{\mu}_* = \mathbf{K}_*^T (\mathbf{K} + \sigma^2\mathbf{I})^{-1}\mathbf{y}$$
+
+### 3. 信息论
+
+**熵**
+$$H(X) = -\sum_{i} p(x_i) \log p(x_i)$$
+
+**KL散度（相对熵）**
+$$D_{KL}(P||Q) = \sum_{i} p(x_i) \log \frac{p(x_i)}{q(x_i)}$$
+
+**互信息**
+$$I(X;Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)p(y)} = H(X) - H(X|Y)$$
+
+### 4. 深度学习
+
+**反向传播**
+$$\frac{\partial L}{\partial W^{(l)}} = \frac{\partial L}{\partial z^{(l+1)}} \cdot \frac{\partial z^{(l+1)}}{\partial a^{(l)}} \cdot \frac{\partial a^{(l)}}{\partial z^{(l)}} \cdot \frac{\partial z^{(l)}}{\partial W^{(l)}} = \boldsymbol{\delta}^{(l+1)} \cdot (a^{(l)})^T$$
+
+**批量归一化**
+$$\hat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad y = \gamma \hat{x} + \beta$$
+
+**注意力机制（Transformer）**
+$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+
+---
+
+## 八、数值分析
+
+### 1. 插值与逼近
+
+**拉格朗日插值**
+$$L_n(x) = \sum_{i=0}^{n} y_i \prod_{j \neq i} \frac{x-x_j}{x_i-x_j}$$
+
+**牛顿插值（差商形式）**
+$$N_n(x) = f[x_0] + f[x_0,x_1](x-x_0) + \cdots + f[x_0,\ldots,x_n](x-x_0)\cdots(x-x_{n-1})$$
+
+**切比雪夫多项式**
+$$T_n(x) = \cos(n \arccos x), \quad x \in [-1,1]$$
+
+最小最大性质：$\|f - p^*\|_\infty = \min_{p \in \mathcal{P}_n} \|f - p\|_\infty$
+
+### 2. 数值积分
+
+**高斯-勒让德求积**
+$$\int_{-1}^{1} f(x)dx \approx \sum_{i=1}^{n} w_i f(x_i)$$
+
+$n$点公式具有 $2n-1$ 次代数精度。
+
+**Romberg积分**
+$$R_{k,j} = R_{k,j-1} + \frac{R_{k,j-1} - R_{k-1,j-1}}{4^{j-1}-1}$$
+
+### 3. 微分方程数值解
+
+**Runge-Kutta方法（RK4）**
+$$\mathbf{y}_{n+1} = \mathbf{y}_n + \frac{h}{6}(\mathbf{k}_1 + 2\mathbf{k}_2 + 2\mathbf{k}_3 + \mathbf{k}_4)$$
+
+其中：
+- $\mathbf{k}_1 = \mathbf{f}(t_n, \mathbf{y}_n)$
+- $\mathbf{k}_2 = \mathbf{f}(t_n + \frac{h}{2}, \mathbf{y}_n + \frac{h}{2}\mathbf{k}_1)$
+- $\mathbf{k}_3 = \mathbf{f}(t_n + \frac{h}{2}, \mathbf{y}_n + \frac{h}{2}\mathbf{k}_2)$
+- $\mathbf{k}_4 = \mathbf{f}(t_n + h, \mathbf{y}_n + h\mathbf{k}_3)$
+
+---
+
+## 九、物理化学数学
+
+### 1. 量子力学
+
+**薛定谔方程**
+$$i\hbar \frac{\partial \psi}{\partial t} = \hat{H}\psi, \quad \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r})$$
+
+**定态薛定谔方程**
+$$\hat{H}\psi_n = E_n\psi_n$$
+
+**不确定性原理**
+$$\Delta x \Delta p \geq \frac{\hbar}{2}$$
+
+**氢原子波函数**
+$$\psi_{nlm}(r,\theta,\phi) = R_{nl}(r)Y_l^m(\theta,\phi)$$
+
+$$R_{nl}(r) = \sqrt{\left(\frac{2}{na_0}\right)^3 \frac{(n-l-1)!}{2n[(n+l)!]}} \left(\frac{2r}{na_0}\right)^l L_{n-l-1}^{2l+1}\left(\frac{2r}{na_0}\right) e^{-\frac{r}{na_0}}$$
+
+### 2. 统计力学
+
+**配分函数**
+$$Z = \sum_i e^{-\beta E_i}, \quad \beta = \frac{1}{k_B T}$$
+
+**玻尔兹曼分布**
+$$p_i = \frac{e^{-\beta E_i}}{Z}$$
+
+**热力学量**
+$$U = -\frac{\partial \ln Z}{\partial \beta}, \quad F = -k_B T \ln Z, \quad S = k_B(\ln Z + \beta U)$$
+
+### 3. 化学动力学
+
+**阿累尼乌斯方程**
+$$k = A e^{-\frac{E_a}{RT}}$$
+
+**米氏方程（酶动力学）**
+$$v = \frac{V_{max}[S]}{K_m + [S]}$$
+
+---
+
+## 十、微分几何与张量分析
+
+### 1. 曲线与曲面
+
+**Frenet-Serret公式**
+$$\frac{d\mathbf{T}}{ds} = \kappa \mathbf{N}, \quad \frac{d\mathbf{N}}{ds} = -\kappa \mathbf{T} + \tau \mathbf{B}, \quad \frac{d\mathbf{B}}{ds} = -\tau \mathbf{N}$$
+
+**高斯曲率与平均曲率**
+$$K = \kappa_1 \kappa_2 = \frac{LN-M^2}{EG-F^2}, \quad H = \frac{\kappa_1 + \kappa_2}{2} = \frac{EN-2FM+GL}{2(EG-F^2)}$$
+
+**高斯-博内定理**
+$$\oint_{\partial M} k_g ds + \iint_M K dA + \sum_{i} \theta_i = 2\pi \chi(M)$$
+
+### 2. 张量分析
+
+**协变导数**
+$$\nabla_k T^i_j = \partial_k T^i_j + \Gamma^i_{kl}T^l_j - \Gamma^l_{kj}T^i_l$$
+
+**黎曼曲率张量**
+$$R^i_{jkl} = \partial_k \Gamma^i_{jl} - \partial_l \Gamma^i_{jk} + \Gamma^i_{km}\Gamma^m_{jl} - \Gamma^i_{lm}\Gamma^m_{jk}$$
+
+**爱因斯坦场方程**
+$$G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu}$$
+
+其中爱因斯坦张量 $G_{\mu\nu} = R_{\mu\nu} - \frac{1}{2}g_{\mu\nu}R$
+
+---
+
+这份公式手册涵盖了大学数学及理工科核心领域的高级内容。每个公式都是其领域内的重要工具，建议结合具体应用场景深入理解推导过程和使用条件。

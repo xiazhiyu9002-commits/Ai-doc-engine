@@ -1,16 +1,26 @@
-# ===== 生产环境配置 =====
+# ==============================================================================
+# Ai-Doc-Engine 生产环境配置
+# ==============================================================================
+# 职责：生产环境特定配置，覆盖主配置
+# 层级：环境层（优先级高于主配置）
+# 维护：生产环境敏感配置必须通过环境变量注入，不设置默认值
+# 安全：部署前必须检查所有环境变量是否正确设置
+# ==============================================================================
+
+# ==================== 数据源配置（生产环境）====================
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/ai_doc_engine?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=Asia/Shanghai}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ai_doc_engine}?currentSchema=public
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     hikari:
-      minimum-idle: 20
-      maximum-pool-size: 80
+      minimum-idle: ${HIKARI_MIN_IDLE:20}
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:80}
       idle-timeout: 300000
       max-lifetime: 1200000
       connection-timeout: 30000
 
+  # ==================== JPA 生产配置 ====================
   jpa:
     show-sql: false
     properties:
@@ -19,28 +29,18 @@ spring:
         jdbc:
           batch_size: 20
 
+  # ==================== 邮件配置（生产环境）====================
   mail:
-    host: ${SPRING_MAIL_HOST:smtp.qq.com}
+    host: ${SPRING_MAIL_HOST}
     port: ${SPRING_MAIL_PORT:465}
-    username: ${SPRING_MAIL_USERNAME:}
-    password: ${SPRING_MAIL_PASSWORD:}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            enable: true
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
 
+  # ==================== Thymeleaf 生产配置 ====================
   thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
-    mode: HTML
-    encoding: UTF-8
     cache: true
 
-# ===== Tomcat 高并发优化 =====
+# ==================== Tomcat 高并发优化 ====================
 server:
   port: 8687
   tomcat:
@@ -50,41 +50,35 @@ server:
     accept-count: 200
     max-connections: 10000
     connection-timeout: 60000
-  servlet:
-    context-path: /
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
 
-# ===== JWT 配置 =====
+# ==================== JWT 配置（生产环境）====================
 jwt:
   secret: ${JWT_SECRET}
-  expiration: 604800000
+  expiration: 7200000
   header: Authorization
   prefix: Bearer
 
-# ===== OAuth 统一登录 =====
+# ==================== OAuth 配置（生产环境）====================
 oauth:
-  client-id: ${OAUTH_CLIENT_ID:}
-  client-secret: ${OAUTH_CLIENT_SECRET:}
-  redirect-uri: ${OAUTH_REDIRECT_URI:}
-  auth-host: ${OAUTH_AUTH_HOST:}
+  client-id: ${OAUTH_CLIENT_ID}
+  client-secret: ${OAUTH_CLIENT_SECRET}
+  redirect-uri: ${OAUTH_REDIRECT_URI}
+  auth-host: ${OAUTH_AUTH_HOST}
   request-timeout-millis: ${OAUTH_REQUEST_TIMEOUT_MILLIS:10000}
 
-# ===== 应用配置 =====
+# ==================== 应用配置（生产环境）====================
 app:
-  frontend-url: ${APP_FRONTEND_URL:http://localhost}
+  frontend-url: ${APP_FRONTEND_URL}
 
   file:
-    upload-dir: /app/uploads
-    export-dir: /app/exports
+    upload-dir: ${APP_FILE_UPLOAD_DIR:/app/uploads}
+    export-dir: ${APP_FILE_EXPORT_DIR:/app/exports}
     max-size: 52428800
     allowed-extensions: jpg,jpeg,png,gif
 
   ocr:
     provider: custom
-    api-url: http://127.0.0.1:5000/parse
+    api-url: ${APP_OCR_API_URL:http://127.0.0.1:5000/parse}
     timeout: 3000000
 
   password-reset:
@@ -102,7 +96,7 @@ app:
     background: transparent
     theme: default
 
-# ===== 日志配置 =====
+# ==================== 日志配置（生产环境）====================
 logging:
   level:
     root: WARN
@@ -114,16 +108,16 @@ logging:
     console: "%d{HH:mm:ss} %-5level %logger{20} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
-    name: /app/logs/ai-doc-engine.log
+    name: ${APP_LOG_PATH:/app/logs}/ai-doc-engine.log
     max-size: 10MB
     max-history: 30
 
-# ===== 健康检查端点 =====
+# ==================== 健康检查端点 ====================
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: when-authorized

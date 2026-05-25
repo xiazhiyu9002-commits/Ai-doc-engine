@@ -1,6 +1,6 @@
 <template>
   <div class="preview-panel">
-    <div class="preview-body" ref="scrollContainer" @scroll="handleScroll" @mouseup="handlePreviewMouseUp">
+    <div class="preview-body" ref="scrollContainer" @scroll="handleScroll">
       <el-empty v-if="!documentStore.udm" description="暂无内容，请输入或导入 Markdown 后点击解析" />
       
       <div v-else-if="documentStore.udm" class="document-content">
@@ -122,9 +122,7 @@
                 :ref="el => setMermaidRef(el as HTMLElement, index)"
                 class="mermaid-diagram"
                 :data-mermaid-code="block.content.rawSource"
-              >
-                {{ block.content.rawSource }}
-              </div>
+              ></div>
               <el-alert type="info" :closable="false" style="margin-top: 12px">
                 导出时将渲染为图片并嵌入 Word 文档
               </el-alert>
@@ -158,12 +156,22 @@ import { throttle, calculateScrollPosition, debugLog, type ScrollData } from '@/
 import mermaid from 'mermaid'
 import 'katex/contrib/mhchem'
 
-// 初始化 Mermaid
 mermaid.initialize({
   startOnLoad: false,
   theme: 'default',
   securityLevel: 'loose',
-  fontFamily: 'Arial, sans-serif'
+  fontFamily: 'Arial, sans-serif',
+  flowchart: {
+    useMaxWidth: true,
+    htmlLabels: true,
+    curve: 'basis'
+  },
+  sequence: {
+    useMaxWidth: true
+  },
+  gantt: {
+    useMaxWidth: true
+  }
 })
 
 const documentStore = useDocumentStore()
@@ -176,7 +184,6 @@ const savedScrollTop = ref<number>(0)
 
 const emit = defineEmits<{
   (e: 'scroll', data: ScrollData): void
-  (e: 'selectionChange', range: { startOffset: number; endOffset: number } | null): void
 }>()
 
 const escapeHtml = (text: string): string => {
@@ -200,38 +207,35 @@ const setMermaidRef = (el: HTMLElement | null, index: number) => {
 const renderMermaidDiagrams = async () => {
   await nextTick()
   
+  if (mermaidElements.value.size === 0) {
+    return
+  }
+  
   for (const [index, element] of mermaidElements.value.entries()) {
     try {
       const code = element.getAttribute('data-mermaid-code')
-      if (!code) continue
-      
-      // 清空元素内容
-      element.innerHTML = ''
-      
-      // 校验 Mermaid 代码
-      try {
-        await mermaid.parse(code)
-      } catch (parseError) {
-        console.error('Mermaid parse failed:', parseError)
-        element.innerHTML = `<div class="mermaid-error">
-          <p>Mermaid 语法错误</p>
-          <pre>${escapeHtml(code)}</pre>
-        </div>`
+      if (!code || code.trim() === '') {
         continue
       }
       
-      // 生成唯一 ID
+      element.innerHTML = ''
+      
       const id = `mermaid-${index}-${Date.now()}`
       
-      // 渲染 Mermaid
-      const { svg } = await mermaid.render(id, code)
-      element.innerHTML = svg
+      try {
+        const { svg } = await mermaid.render(id, code)
+        element.innerHTML = svg
+      } catch (renderError: any) {
+        console.error('[Mermaid] 渲染失败:', renderError)
+        const errorMsg = renderError?.message || '未知错误'
+        element.innerHTML = `<div class="mermaid-error">
+          <p style="color: #e74c3c; font-weight: bold;">Mermaid 语法错误</p>
+          <p style="color: #666; font-size: 12px;">${escapeHtml(errorMsg)}</p>
+          <pre style="background: #f5f5f5; padding: 8px; border-radius: 4px; overflow-x: auto; font-size: 12px;">${escapeHtml(code)}</pre>
+        </div>`
+      }
     } catch (error) {
-      console.error('Mermaid rendering failed:', error)
-      element.innerHTML = `<div class="mermaid-error">
-        <p>渲染失败</p>
-        <pre>${element.getAttribute('data-mermaid-code') || ''}</pre>
-      </div>`
+      console.error('[Mermaid] 处理失败:', error)
     }
   }
 }
@@ -438,221 +442,6 @@ const getRichTextClass = (segment: RichText): string[] => {
   return classes
 }
 
-const highlightBySourceRange = (startOffset: number, endOffset: number) => {
-  if (!scrollContainer.value) return
-  
-  const blocks = documentStore.udm?.blocks || []
-  if (blocks.length === 0) return
-  
-  let startBlockIndex = -1
-  let endBlockIndex = -1
-  
-  for (let i = 0; i < blocks.length; i++) {
-    const block = blocks[i]
-    if (block.sourceStartOffset !== undefined && block.sourceEndOffset !== undefined) {
-      if (startBlockIndex < 0 && startOffset >= block.sourceStartOffset && startOffset <= block.sourceEndOffset) {
-        startBlockIndex = i
-      }
-      if (endOffset >= block.sourceStartOffset && endOffset <= block.sourceEndOffset) {
-        endBlockIndex = i
-      }
-    }
-  }
-  
-  if (startBlockIndex < 0) return
-  if (endBlockIndex < 0) endBlockIndex = startBlockIndex
-  
-  const selection = window.getSelection()
-  if (!selection) return
-  
-  const collectTextNodes = (element: HTMLElement): Text[] => {
-    const nodes: Text[] = []
-    const walk = (node: Node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        nodes.push(node as Text)
-      } else {
-        for (const child of Array.from(node.childNodes)) {
-          walk(child)
-        }
-      }
-    }
-    walk(element)
-    return nodes
-  }
-  
-  const findPositionInBlock = (
-    blockIndex: number,
-    targetOffset: number
-  ): { node: Text; offset: number } | null => {
-    const block = blocks[blockIndex]
-    const blockElement = blockElements.value[blockIndex]
-    if (!block || !blockElement) return null
-    
-    const blockSourceStart = block.sourceStartOffset || 0
-    const relativeOffset = targetOffset - blockSourceStart
-    
-    const textNodes = collectTextNodes(blockElement)
-    if (textNodes.length === 0) return null
-    
-    let currentOffset = 0
-    for (const textNode of textNodes) {
-      const nodeLength = textNode.textContent?.length || 0
-      if (currentOffset + nodeLength > relativeOffset) {
-        return { node: textNode, offset: relativeOffset - currentOffset }
-      }
-      currentOffset += nodeLength
-    }
-    
-    const lastNode = textNodes[textNodes.length - 1]
-    return { node: lastNode, offset: lastNode.textContent?.length || 0 }
-  }
-  
-  const startResult = findPositionInBlock(startBlockIndex, startOffset)
-  if (!startResult) return
-  
-  let endResult: { node: Text; offset: number } | null = null
-  if (startBlockIndex === endBlockIndex) {
-    endResult = findPositionInBlock(endBlockIndex, endOffset) || startResult
-  } else {
-    const endBlock = blocks[endBlockIndex]
-    const endBlockElement = blockElements.value[endBlockIndex]
-    if (!endBlock || !endBlockElement) {
-      endResult = startResult
-    } else {
-      const endBlockSourceStart = endBlock.sourceStartOffset || 0
-      const relativeEndOffset = endOffset - endBlockSourceStart
-      
-      const endTextNodes = collectTextNodes(endBlockElement)
-      if (endTextNodes.length === 0) {
-        endResult = startResult
-      } else {
-        let currentOffset = 0
-        for (const textNode of endTextNodes) {
-          const nodeLength = textNode.textContent?.length || 0
-          if (currentOffset + nodeLength > relativeEndOffset) {
-            endResult = { node: textNode, offset: relativeEndOffset - currentOffset }
-            break
-          }
-          currentOffset += nodeLength
-        }
-        if (!endResult) {
-          const lastNode = endTextNodes[endTextNodes.length - 1]
-          endResult = { node: lastNode, offset: lastNode.textContent?.length || 0 }
-        }
-      }
-    }
-  }
-  
-  if (!endResult) {
-    endResult = startResult
-  }
-  
-  try {
-    const range = document.createRange()
-    range.setStart(startResult.node, Math.max(0, Math.min(startResult.offset, startResult.node.textContent?.length || 0)))
-    range.setEnd(endResult.node, Math.max(0, Math.min(endResult.offset, endResult.node.textContent?.length || 0)))
-    
-    selection.removeAllRanges()
-    selection.addRange(range)
-    
-    const containerRect = scrollContainer.value.getBoundingClientRect()
-    const rangeRect = range.getBoundingClientRect()
-    
-    if (rangeRect.top < containerRect.top || rangeRect.bottom > containerRect.bottom) {
-      range.startContainer.parentElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-  } catch (e) {
-    console.warn('Failed to create selection range:', e)
-  }
-}
-
-const clearHighlight = () => {
-  const selection = window.getSelection()
-  if (selection) {
-    selection.removeAllRanges()
-  }
-}
-
-const handlePreviewMouseUp = () => {
-  const selection = window.getSelection()
-  if (!selection || selection.isCollapsed) {
-    return
-  }
-  
-  const range = selection.getRangeAt(0)
-  if (!range) return
-  
-  const startContainer = range.startContainer
-  const endContainer = range.endContainer
-  
-  const findBlockElement = (node: Node): HTMLElement | null => {
-    let current: Node | null = node
-    while (current) {
-      if (current instanceof HTMLElement && current.classList.contains('block')) {
-        return current
-      }
-      current = current.parentNode
-    }
-    return null
-  }
-  
-  const startBlock = findBlockElement(startContainer)
-  const endBlock = findBlockElement(endContainer)
-  
-  if (!startBlock || !endBlock) return
-  
-  const startBlockSourceStart = parseInt(startBlock.dataset.sourceStart || '-1')
-  const endBlockSourceStart = parseInt(endBlock.dataset.sourceStart || '-1')
-  
-  if (startBlockSourceStart < 0 || endBlockSourceStart < 0) return
-  
-  const collectTextNodes = (element: HTMLElement): Text[] => {
-    const nodes: Text[] = []
-    const walk = (node: Node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        nodes.push(node as Text)
-      } else {
-        for (const child of Array.from(node.childNodes)) {
-          walk(child)
-        }
-      }
-    }
-    walk(element)
-    return nodes
-  }
-  
-  const getOffsetInBlock = (container: Node, offset: number, block: HTMLElement): number => {
-    const textNodes = collectTextNodes(block)
-    
-    let currentOffset = 0
-    for (const textNode of textNodes) {
-      if (textNode === container || textNode.contains(container)) {
-        return currentOffset + offset
-      }
-      currentOffset += textNode.textContent?.length || 0
-    }
-    return currentOffset
-  }
-  
-  const startOffsetInBlock = getOffsetInBlock(startContainer, range.startOffset, startBlock)
-  const sourceStartOffset = startBlockSourceStart + startOffsetInBlock
-  
-  let sourceEndOffset: number
-  
-  if (startBlock === endBlock) {
-    const endOffsetInBlock = getOffsetInBlock(endContainer, range.endOffset, endBlock)
-    sourceEndOffset = startBlockSourceStart + endOffsetInBlock
-  } else {
-    const endOffsetInBlock = getOffsetInBlock(endContainer, range.endOffset, endBlock)
-    sourceEndOffset = endBlockSourceStart + endOffsetInBlock
-  }
-  
-  emit('selectionChange', {
-    startOffset: sourceStartOffset,
-    endOffset: sourceEndOffset
-  })
-}
-
 watch(() => documentStore.udm?.blocks.length, (newLen, oldLen) => {
   if (newLen !== oldLen) {
     nextTick(() => {
@@ -663,16 +452,22 @@ watch(() => documentStore.udm?.blocks.length, (newLen, oldLen) => {
       setTimeout(() => {
         updateBlockHeightCache()
         renderMermaidDiagrams()
-      }, 100)
+      }, 200)
     })
   }
 })
 
-// 监听 UDM 变化，重新渲染 Mermaid
-watch(() => documentStore.udm, () => {
-  nextTick(() => {
-    renderMermaidDiagrams()
-  })
+watch(() => documentStore.udm, (newUdm, oldUdm) => {
+  if (!newUdm) return
+  
+  const hasFlowchart = newUdm.blocks?.some((b: any) => b.type === 'flowchart')
+  if (hasFlowchart) {
+    nextTick(() => {
+      setTimeout(() => {
+        renderMermaidDiagrams()
+      }, 150)
+    })
+  }
 }, { deep: true })
 
 const handleResize = () => {
@@ -684,7 +479,7 @@ onMounted(() => {
     updateBlockHeightCache()
     setupVisibilityObserver()
     renderMermaidDiagrams()
-  }, 200)
+  }, 300)
   
   window.addEventListener('resize', handleResize)
 })
@@ -707,9 +502,7 @@ defineExpose({
   getVisibleBlockIndex,
   updateBlockHeightCache,
   setupVisibilityObserver,
-  cleanupVisibilityObserver,
-  highlightBySourceRange,
-  clearHighlight
+  cleanupVisibilityObserver
 })
 </script>
 

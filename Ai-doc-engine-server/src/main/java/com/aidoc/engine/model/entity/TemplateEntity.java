@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -35,7 +37,8 @@ public class TemplateEntity {
     @Builder.Default
     private String templateType = "custom";
     
-    @Column(name = "config_json", nullable = false, columnDefinition = "JSON")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "config_json", nullable = false, columnDefinition = "jsonb")
     private String configJson;
     
     @Column(name = "is_default", nullable = false)

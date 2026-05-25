@@ -1,0 +1,133 @@
+机器学习核心公式速查手册
+导语：本文档汇总了机器学习领域最核心的数学公式，涵盖线性模型、神经网络、树模型、距离度量、评估指标及优化算法。所有公式均采用 LaTeX 语法渲染。
+一、 线性模型
+1.1 线性回归
+线性回归试图找到一个超平面来拟合特征与连续目标值之间的关系。
+假设函数：
+$$ h_\theta(x) = \theta^T x = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \dots + \theta_n x_n $$
+*其中，$\theta$ 为权重向量，$x$ 为特征向量（含偏置项 $x_0=1$）。*
+损失函数 (均方误差 MSE)：
+$$ J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} \left( h_\theta(x^{(i)}) - y^{(i)} \right)^2 $$
+*其中，$m$ 为样本数量，$y^{(i)}$ 为真实值。*
+梯度下降参数更新：
+$$ \theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta) = \theta_j - \frac{\alpha}{m} \sum_{i=1}^{m} \left( h_\theta(x^{(i)}) - y^{(i)} \right) x_j^{(i)} $$
+*其中，$\alpha$ 为学习率。*
+正规方程 (解析解)：
+$$ \theta = (X^T X)^{-1} X^T y $$
+1.2 逻辑回归
+逻辑回归用于分类问题，通过 Sigmoid 函数将线性输出映射到 $[0, 1]$ 概率区间。
+Sigmoid 函数：
+$$ g(z) = \frac{1}{1 + e^{-z}} $$
+假设函数：
+$$ h_\theta(x) = g(\theta^T x) = \frac{1}{1 + e^{-\theta^T x}} $$
+损失函数 (交叉熵)：
+$$ J(\theta) = -\frac{1}{m} \sum_{i=1}^{m} \left[ y^{(i)} \log\left(h_\theta(x^{(i)})\right) + \left(1 - y^{(i)}\right) \log\left(1 - h_\theta(x^{(i)})\right) \right] $$
+二、 神经网络
+2.1 前向传播
+对于第 $l$ 层网络：
+线性变换：
+$$ z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]} $$
+激活函数输出：
+$$ a^{[l]} = g^{[l]}(z^{[l]}) $$
+2.2 常用激活函数
+2.3 反向传播
+根据链式法则计算误差对参数的梯度：
+输出层误差：
+$$ \delta^{[L]} = a^{[L]} - y $$
+隐藏层误差：
+$$ \delta^{[l]} = \left( W^{[l+1]T} \delta^{[l+1]} \right) \odot g'^{[l]}(z^{[l]}) $$
+*注：$\odot$ 表示哈达玛乘积。*
+梯度计算：
+$$ \frac{\partial J}{\partial W^{[l]}} = \frac{1}{m} \delta^{[l]} a^{[l-1]T} $$
+$$ \frac{\partial J}{\partial b^{[l]}} = \frac{1}{m} \sum_{i=1}^{m} \delta^{l} $$
+三、 支持向量机 (SVM)
+3.1 硬间隔最大化
+寻找使得离超平面最近的样本点（支持向量）间隔最大的超平面。
+决策边界：
+$$ w^T x + b = 0 $$
+几何间隔：
+$$ \gamma = \frac{2}{|w|} $$
+3.2 软间隔与合页损失函数
+引入松弛变量 $\xi_i$ 允许部分样本分类错误：
+$$ \min_{w,b,\xi} \frac{1}{2} |w|^2 + C \sum_{i=1}^{m} \xi_i $$
+*其中，$C$ 为惩罚系数，$C$ 越大对误分类的惩罚越大。*
+四、 概率图模型
+4.1 朴素贝叶斯
+基于贝叶斯定理，并假设特征之间相互独立。
+贝叶斯定理：
+$$ P(Y=y_k | X=x) = \frac{P(X=x | Y=y_k) P(Y=y_k)}{P(X=x)} $$
+朴素假设：
+$$ P(X=x | Y=y_k) = P(x_1, x_2, \dots, x_n | Y=y_k) = \prod_{i=1}^{n} P(x_i | Y=y_k) $$
+4.2 隐马尔可夫模型 (HMM)
+预测 (状态转移)：
+$$ P(q_{t+1} | q_t) = A_{q_t, q_{t+1}} $$
+发射 (观测概率)：
+$$ P(o_t | q_t) = B_{q_t, o_t} $$
+五、 决策树与集成学习
+5.1 信息熵
+衡量数据集的纯度（不确定性）：
+$$ H(D) = -\sum_{k=1}^{K} p_k \log_2(p_k) $$
+*其中，$p_k$ 是第 $k$ 类样本所占的比例。*
+5.2 信息增益
+按特征 $a$ 划分后，熵的减少量：
+$$ Gain(D, a) = H(D) - \sum_{v=1}^{V} \frac{|D^v|}{|D|} H(D^v) $$
+5.3 基尼系数
+CART 决策树使用的纯度度量：
+$$ Gini(D) = 1 - \sum_{k=1}^{K} p_k^2 $$
+六、 距离与相似度度量
+七、 评估指标
+混淆矩阵定义：TP (真阳性), FP (假阳性), TN (真阴性), FN (假阴性)
+准确率：
+$$ Accuracy = \frac{TP + TN}{TP + TN + FP + FN} $$
+精确率：
+$$ Precision = \frac{TP}{TP + FP} $$
+召回率：
+$$ Recall = \frac{TP}{TP + FN} $$
+F1 分数 (调和平均)：
+$$ F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall} = \frac{2TP}{2TP + FP + FN} $$
+AUC-ROC：
+ROC 曲线下的面积，公式等价于随机抽取一个正样本和一个负样本，模型将正样本预测为正的概率大于负样本预测为正的概率：
+$$ AUC = P(f(x^+) > f(x^-)) $$
+八、 正则化技术
+为了防止模型过拟合，在损失函数后加入惩罚项。设原损失函数为 $J_0(\theta)$。
+8.1 L2 正则化
+公式：$$ J(\theta) = J_0(\theta) + \lambda \sum_{j=1}^{n} \theta_j^2 $$
+特点：使得权重衰减，趋向于 0 但不等于 0（Ridge 回归）。高斯先验假设。
+8.2 L1 正则化
+公式：$$ J(\theta) = J_0(\theta) + \lambda \sum_{j=1}^{n} |\theta_j| $$
+特点：产生稀疏权重矩阵，可用于特征选择（Lasso 回归）。拉普拉斯先验假设。
+8.3 弹性网络
+公式：$$ J(\theta) = J_0(\theta) + \lambda_1 \sum_{j=1}^{n} |\theta_j| + \lambda_2 \sum_{j=1}^{n} \theta_j^2 $$
+特点：结合了 L1 和 L2 的优点。
+九、 进阶优化算法
+9.1 动量法
+引入历史梯度的指数加权平均，加速收敛并减少震荡：
+$$ v_t = \beta v_{t-1} + (1 - \beta) \nabla_\theta J(\theta) $$
+$$ \theta = \theta - \alpha v_t $$
+9.2 RMSprop
+对梯度平方进行指数加权平均，自适应调节学习率：
+$$ s_t = \beta s_{t-1} + (1 - \beta) (\nabla_\theta J(\theta))^2 $$
+$$ \theta = \theta - \frac{\alpha}{\sqrt{s_t + \epsilon}} \nabla_\theta J(\theta) $$
+9.3 Adam 算法
+结合 Momentum 和 RMSprop 的优点（当前最主流优化器）：
+$$ m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t \quad \text{(一阶矩估计)} $$
+$$ v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2 \quad \text{(二阶矩估计)} $$
+*偏差校正*：
+$$ \hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1 - \beta_2^t} $$
+*参数更新*：
+$$ \theta = \theta - \frac{\alpha}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t $$
+十、 降维与流形学习
+10.1 主成分分析 (PCA)
+寻找数据投影后方差最大的方向。
+协方差矩阵：
+$$ \Sigma = \frac{1}{m} X^T X $$
+特征值分解：
+$$ \Sigma = U \Lambda U^T $$
+降维投影：
+$$ Z = U_{reduce}^T X $$
+*其中，$U_{reduce}$ 是由前 $k$ 个最大特征值对应的特征向量组成的矩阵。*
+10.2 SVD 奇异值分解
+常用于推荐系统中的矩阵分解：
+$$ X = U \Sigma V^T $$
+*其中，$U$ 和 $V$ 是正交矩阵，$\Sigma$ 是对角矩阵（奇异值）。*
+提示：在编写机器学习代码时（如使用 Python 的 numpy 或 scipy），理解这些底层公式能够帮助您更好地调参、排查梯度消失/爆炸问题以及定制化自己的损失函数层。

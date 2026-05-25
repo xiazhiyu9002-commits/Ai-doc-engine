@@ -7,14 +7,11 @@ import com.aidoc.engine.model.dto.template.TemplateCreateRequest;
 import com.aidoc.engine.model.dto.template.TemplateQueryRequest;
 import com.aidoc.engine.model.dto.template.TemplateUpdateRequest;
 import com.aidoc.engine.model.entity.TemplateEntity;
-import com.aidoc.engine.model.entity.TemplateVersionEntity;
 import com.aidoc.engine.model.entity.UserEntity;
 import com.aidoc.engine.model.vo.admin.PageResult;
 import com.aidoc.engine.model.vo.template.TemplateListResponse;
-import com.aidoc.engine.model.vo.template.TemplateVersionVO;
 import com.aidoc.engine.model.vo.template.TemplateVO;
 import com.aidoc.engine.repository.TemplateRepository;
-import com.aidoc.engine.repository.TemplateVersionRepository;
 import com.aidoc.engine.repository.UserRepository;
 import com.aidoc.engine.service.TemplateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,16 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * 模板服务实现
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TemplateServiceImpl implements TemplateService {
     
     private final TemplateRepository templateRepository;
-    private final TemplateVersionRepository templateVersionRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     
@@ -72,7 +65,6 @@ public class TemplateServiceImpl implements TemplateService {
                 pageable
         );
         
-        // 批量获取用户信息
         List<Long> userIds = templatePage.getContent().stream()
                 .map(TemplateEntity::getUserId)
                 .distinct()
@@ -108,7 +100,6 @@ public class TemplateServiceImpl implements TemplateService {
     public TemplateVO createTemplate(Long userId, TemplateCreateRequest request) {
         log.info("创建模板: userId={}, name={}", userId, request.getName());
         
-        // 检查名称是否重复
         if (templateRepository.existsByNameAndUserId(request.getName(), userId)) {
             throw new BusinessException(ErrorCode.BAD_REQUEST, "模板名称已存在");
         }
@@ -129,9 +120,6 @@ public class TemplateServiceImpl implements TemplateService {
             
             template = templateRepository.save(template);
             
-            // 创建初始版本
-            createVersion(template.getId(), template, userId, "初始版本", null);
-            
             log.info("模板创建成功: id={}", template.getId());
             
             return convertToVO(template);
@@ -150,7 +138,6 @@ public class TemplateServiceImpl implements TemplateService {
         TemplateEntity template = templateRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "模板不存在"));
         
-        // 检查权限
         if (!template.getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN, "无权修改此模板");
         }
@@ -171,9 +158,6 @@ public class TemplateServiceImpl implements TemplateService {
             
             template = templateRepository.save(template);
             
-            // 创建新版本
-            createVersion(id, template, userId, null, request.getChangeNote());
-            
             log.info("模板更新成功: id={}", id);
             
             return convertToVO(template);
@@ -192,15 +176,10 @@ public class TemplateServiceImpl implements TemplateService {
         TemplateEntity template = templateRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "模板不存在"));
         
-        // 检查权限
         if (!template.getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN, "无权删除此模板");
         }
         
-        // 删除模板的所有版本
-        templateVersionRepository.deleteByTemplateId(id);
-        
-        // 删除模板
         templateRepository.delete(template);
         
         log.info("模板删除成功: id={}", id);
@@ -214,7 +193,6 @@ public class TemplateServiceImpl implements TemplateService {
         TemplateEntity source = templateRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "源模板不存在"));
         
-        // 检查名称是否重复
         if (templateRepository.existsByNameAndUserId(newName, userId)) {
             throw new BusinessException(ErrorCode.BAD_REQUEST, "模板名称已存在");
         }
@@ -232,9 +210,6 @@ public class TemplateServiceImpl implements TemplateService {
         
         copy = templateRepository.save(copy);
         
-        // 创建初始版本
-        createVersion(copy.getId(), copy, userId, "复制自: " + source.getName(), null);
-        
         log.info("模板复制成功: newId={}", copy.getId());
         
         return convertToVO(copy);
@@ -248,92 +223,19 @@ public class TemplateServiceImpl implements TemplateService {
         TemplateEntity template = templateRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "模板不存在"));
         
-        // 检查权限
         if (!template.getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.FORBIDDEN, "无权操作此模板");
         }
         
-        // 取消原有默认模板
         templateRepository.findByIsDefaultTrue().ifPresent(defaultTemplate -> {
             defaultTemplate.setIsDefault(false);
             templateRepository.save(defaultTemplate);
         });
         
-        // 设置新的默认模板
         template.setIsDefault(true);
         templateRepository.save(template);
         
         log.info("默认模板设置成功: id={}", id);
-    }
-    
-    @Override
-    public List<TemplateVersionVO> getTemplateVersions(Long templateId) {
-        log.info("获取模板版本列表: templateId={}", templateId);
-        
-        // 检查模板是否存在
-        if (!templateRepository.existsById(templateId)) {
-            throw new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "模板不存在");
-        }
-        
-        List<TemplateVersionEntity> versions = templateVersionRepository.findByTemplateIdOrderByVersionDesc(templateId);
-        
-        // 批量获取用户信息
-        List<Long> userIds = versions.stream()
-                .map(TemplateVersionEntity::getCreatedBy)
-                .distinct()
-                .toList();
-        
-        Map<Long, UserEntity> userMap = userRepository.findAllById(userIds).stream()
-                .collect(Collectors.toMap(UserEntity::getId, u -> u));
-        
-        return versions.stream()
-                .map(v -> convertVersionToVO(v, userMap.get(v.getCreatedBy())))
-                .toList();
-    }
-    
-    @Override
-    public TemplateVersionVO getTemplateVersion(Long templateId, Integer version) {
-        log.info("获取模板版本: templateId={}, version={}", templateId, version);
-        
-        TemplateVersionEntity versionEntity = templateVersionRepository
-                .findByTemplateIdAndVersion(templateId, version)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "版本不存在"));
-        
-        UserEntity user = userRepository.findById(versionEntity.getCreatedBy()).orElse(null);
-        
-        return convertVersionToVO(versionEntity, user);
-    }
-    
-    @Override
-    @Transactional
-    public TemplateVO rollbackToVersion(Long templateId, Integer version, Long userId) {
-        log.info("回滚模板版本: templateId={}, version={}, userId={}", templateId, version, userId);
-        
-        TemplateEntity template = templateRepository.findById(templateId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.TEMPLATE_NOT_FOUND, "模板不存在"));
-        
-        // 检查权限
-        if (!template.getUserId().equals(userId)) {
-            throw new BusinessException(ErrorCode.FORBIDDEN, "无权操作此模板");
-        }
-        
-        TemplateVersionEntity versionEntity = templateVersionRepository
-                .findByTemplateIdAndVersion(templateId, version)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "版本不存在"));
-        
-        // 回滚到指定版本
-        template.setName(versionEntity.getName());
-        template.setDescription(versionEntity.getDescription());
-        template.setConfigJson(versionEntity.getConfigJson());
-        
-        template = templateRepository.save(template);
-        
-        // 创建新版本记录回滚操作
-        createVersion(templateId, template, userId, null, "回滚到版本 " + version);
-        
-        log.info("模板回滚成功: templateId={}, toVersion={}", templateId, version);
-        
-        return convertToVO(template);
     }
     
     @Override
@@ -370,32 +272,6 @@ public class TemplateServiceImpl implements TemplateService {
         templateRepository.save(template);
     }
     
-    /**
-     * 创建模板版本
-     */
-    private void createVersion(Long templateId, TemplateEntity template, Long userId, String versionName, String changeNote) {
-        Integer maxVersion = templateVersionRepository.findMaxVersionByTemplateId(templateId);
-        int newVersion = (maxVersion != null ? maxVersion : 0) + 1;
-        
-        TemplateVersionEntity version = TemplateVersionEntity.builder()
-                .templateId(templateId)
-                .version(newVersion)
-                .versionName(versionName != null ? versionName : "v" + newVersion)
-                .name(template.getName())
-                .description(template.getDescription())
-                .configJson(template.getConfigJson())
-                .changeNote(changeNote)
-                .createdBy(userId)
-                .build();
-        
-        templateVersionRepository.save(version);
-        
-        log.info("创建模板版本: templateId={}, version={}", templateId, newVersion);
-    }
-    
-    /**
-     * 转换为VO
-     */
     private TemplateVO convertToVO(TemplateEntity entity) {
         try {
             TemplateConfig config = objectMapper.readValue(entity.getConfigJson(), TemplateConfig.class);
@@ -419,9 +295,6 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
     
-    /**
-     * 转换为VO（带用户信息）
-     */
     private TemplateVO convertToVOWithUser(TemplateEntity entity, UserEntity user) {
         try {
             TemplateConfig config = objectMapper.readValue(entity.getConfigJson(), TemplateConfig.class);
@@ -440,33 +313,6 @@ public class TemplateServiceImpl implements TemplateService {
                     .status(1)
                     .createdAt(entity.getCreatedAt())
                     .updatedAt(entity.getUpdatedAt())
-                    .build();
-                    
-        } catch (JsonProcessingException e) {
-            log.error("模板配置反序列化失败", e);
-            throw new BusinessException(ErrorCode.BAD_REQUEST, "模板配置格式错误");
-        }
-    }
-    
-    /**
-     * 转换版本为VO
-     */
-    private TemplateVersionVO convertVersionToVO(TemplateVersionEntity entity, UserEntity user) {
-        try {
-            TemplateConfig config = objectMapper.readValue(entity.getConfigJson(), TemplateConfig.class);
-            
-            return TemplateVersionVO.builder()
-                    .id(entity.getId())
-                    .templateId(entity.getTemplateId())
-                    .version(entity.getVersion())
-                    .versionName(entity.getVersionName())
-                    .name(entity.getName())
-                    .description(entity.getDescription())
-                    .config(config)
-                    .changeNote(entity.getChangeNote())
-                    .createdBy(entity.getCreatedBy())
-                    .createdByName(user != null ? user.getNickname() : null)
-                    .createdAt(entity.getCreatedAt())
                     .build();
                     
         } catch (JsonProcessingException e) {

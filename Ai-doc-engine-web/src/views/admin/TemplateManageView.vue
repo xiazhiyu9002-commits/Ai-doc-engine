@@ -64,6 +64,7 @@
               <th style="width:120px">创建者</th>
               <th style="width:100px">使用次数</th>
               <th style="width:90px">状态</th>
+              <th style="width:90px">公开</th>
               <th style="width:170px">创建时间</th>
               <th style="width:170px">更新时间</th>
               <th style="width:260px;text-align:center;position:sticky;right:0;background:var(--bg-header)">操作</th>
@@ -90,6 +91,12 @@
                   {{ row.status === 1 ? '启用' : '禁用' }}
                 </span>
               </td>
+              <td>
+                <span class="status" :class="row.isPublic ? 'status-on' : 'status-off'">
+                  <i class="status-dot"></i>
+                  {{ row.isPublic ? '公开' : '私有' }}
+                </span>
+              </td>
               <td><span class="time">{{ formatTime(row.createdAt) }}</span></td>
               <td><span class="time">{{ formatTime(row.updatedAt) }}</span></td>
               <td class="actions-cell">
@@ -107,7 +114,7 @@
               </td>
             </tr>
             <tr v-if="!adminStore.loading && (!adminStore.templates?.items?.length)">
-              <td colspan="10" class="empty-cell">
+              <td colspan="11" class="empty-cell">
                 <div class="empty">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="40" height="40">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -140,7 +147,7 @@
     </div>
 
     <!-- 新建/编辑弹窗 -->
-    <el-dialog v-model="formVisible" :title="isEdit ? '编辑模板' : '新建模板'" width="600px" destroy-on-close>
+    <el-dialog v-model="formVisible" :title="isEdit ? '编辑模板' : '新建模板'" width="750px" destroy-on-close>
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="80px">
         <el-form-item label="模板名称" prop="name">
           <el-input v-model="formData.name" placeholder="请输入模板名称" maxlength="100" />
@@ -157,6 +164,16 @@
         <el-form-item label="是否公开" prop="isPublic">
           <el-switch v-model="formData.isPublic" />
           <span class="status-label">{{ formData.isPublic ? '公开' : '私有' }}</span>
+        </el-form-item>
+        <el-form-item label="模板内容" prop="configJson">
+          <el-input
+            v-model="formData.configJson"
+            type="textarea"
+            :rows="12"
+            placeholder="请输入模板配置JSON（可为空，将使用默认配置）"
+            class="config-textarea"
+          />
+          <div class="config-hint">留空将使用默认模板配置，输入需为有效的JSON格式</div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -283,40 +300,43 @@ const formData = reactive({
   name: '',
   templateType: 'custom',
   description: '',
-  isPublic: true
+  isPublic: true,
+  configJson: ''
 })
 
 const defaultTemplateConfig = {
-  pageSettings: {
-    pageSize: 'A4',
-    orientation: 'portrait',
-    margins: { top: 2.5, bottom: 2.5, left: 2.8, right: 2.5, gutter: 0.5 }
-  },
   fontSettings: {
-    fontFamily: '宋体',
     fontSize: 12,
+    fontFamily: '宋体',
+    codeFontSize: 10,
     headingFonts: {
-      h1: { family: '黑体', size: 22, bold: true },
-      h2: { family: '黑体', size: 18, bold: true },
-      h3: { family: '黑体', size: 16, bold: true },
-      h4: { family: '黑体', size: 14, bold: true }
+      h1: { bold: true, size: 22, family: '黑体' },
+      h2: { bold: true, size: 18, family: '黑体' },
+      h3: { bold: true, size: 16, family: '黑体' },
+      h4: { bold: true, size: 14, family: '黑体' },
+      h5: { bold: true, size: 12, family: '黑体' },
+      h6: { bold: true, size: 12, family: '黑体' }
     },
-    codeFontFamily: 'Times New Roman',
-    codeFontSize: 10
+    codeFontFamily: 'Consolas'
+  },
+  pageSettings: {
+    margins: { top: 2.5, left: 2.8, right: 2.5, bottom: 2.5, gutter: 0.5 },
+    pageSize: 'A4',
+    orientation: 'portrait'
   },
   paragraphSettings: {
+    alignment: 'left',
     lineSpacing: 1.5,
-    paragraphSpacing: { before: 0, after: 0 },
     firstLineIndent: 2,
-    alignment: 'left'
+    paragraphSpacing: { after: 0, before: 0 }
   },
   headerFooterSettings: {
-    header: '',
     footer: '第 {page} 页，共 {total} 页',
-    firstPageDifferent: true,
-    oddEvenDifferent: false,
+    header: '论文标题',
+    footerHeight: 1.5,
     headerHeight: 1.5,
-    footerHeight: 1.5
+    oddEvenDifferent: false,
+    firstPageDifferent: true
   }
 }
 
@@ -384,6 +404,7 @@ const resetForm = () => {
   formData.templateType = 'custom'
   formData.description = ''
   formData.isPublic = true
+  formData.configJson = ''
   currentId.value = null
   isEdit.value = false
 }
@@ -406,6 +427,7 @@ const handleEdit = (row: Template) => {
   formData.templateType = row.templateType || 'custom'
   formData.description = row.description || ''
   formData.isPublic = row.isPublic ?? true
+  formData.configJson = row.config ? JSON.stringify(row.config, null, 2) : JSON.stringify(defaultTemplateConfig, null, 2)
   formVisible.value = true
 }
 
@@ -413,13 +435,27 @@ const handleSubmit = async () => {
   if (!formRef.value) return
   await formRef.value.validate(async (valid) => {
     if (!valid) return
+    
+    let config
+    if (formData.configJson && formData.configJson.trim()) {
+      try {
+        config = JSON.parse(formData.configJson)
+      } catch (e) {
+        ElMessage.error('模板内容JSON格式错误，请检查')
+        return
+      }
+    } else {
+      config = defaultTemplateConfig
+    }
+    
     submitting.value = true
     try {
       if (isEdit.value && currentId.value) {
         await adminStore.updateTemplate(currentId.value, {
           name: formData.name,
           description: formData.description,
-          config: defaultTemplateConfig
+          config: config,
+          isPublic: formData.isPublic
         })
         ElMessage.success('更新成功')
       } else {
@@ -427,7 +463,7 @@ const handleSubmit = async () => {
           name: formData.name,
           description: formData.description,
           templateType: formData.templateType,
-          config: defaultTemplateConfig,
+          config: config,
           isPublic: formData.isPublic
         })
         ElMessage.success('创建成功')
@@ -626,7 +662,7 @@ onMounted(() => fetchData())
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  min-width: 1400px;
+  min-width: 1500px;
   table-layout: auto;
   border: 1px solid var(--border-light);
 }
@@ -885,5 +921,17 @@ onMounted(() => fetchData())
   font-size: 13px;
   color: var(--text-secondary);
   padding: 4px 0;
+}
+
+.config-textarea :deep(textarea) {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.config-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 </style>

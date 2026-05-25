@@ -75,7 +75,6 @@
               @scroll="handleInputScroll" 
               @parse="handleParse" 
               @clear="handleClear"
-              @selection-change="handleEditorSelectionChange"
               ref="contentInputRef" 
               :loading="documentStore.loading" 
             />
@@ -169,7 +168,6 @@
             
             <PreviewPanel 
               @scroll="handlePreviewScroll" 
-              @selection-change="handlePreviewSelectionChange"
               ref="previewPanelRef" 
             />
           </div>
@@ -199,13 +197,13 @@
                   <svg class="footer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 8L10.8906 13.2604C11.5624 13.7083 12.4376 13.7083 13.1094 13.2604L21 8M5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V17C3 18.1046 3.89543 19 5 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <a href="mailto:aidoc@gznc.edu.cn">aidoc@gznc.edu.cn</a>
+                  <!-- <span>aidoc@gznc.edu.cn</span> -->
                 </li>
                 <li>
                   <svg class="footer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7293C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1468 21.5901 20.9046 21.7335 20.6407 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5341 11.19 18.85C8.77382 17.3147 6.72533 15.2662 5.18999 12.85C3.49997 10.2412 2.44824 7.27099 2.11999 4.18C2.09494 3.90347 2.12781 3.62476 2.21643 3.36162C2.30506 3.09849 2.4475 2.85669 2.6347 2.65162C2.82189 2.44655 3.04974 2.28271 3.30372 2.17052C3.55771 2.05833 3.83227 2.00026 4.10999 2H7.10999C7.5953 1.99522 8.06579 2.16708 8.43376 2.48353C8.80173 2.79999 9.04207 3.23945 9.10999 3.72C9.23662 4.68007 9.47144 5.62273 9.80999 6.53C9.94454 6.88792 9.97366 7.27691 9.8939 7.65088C9.81415 8.02485 9.62886 8.36811 9.35999 8.64L8.08999 9.91C9.51355 12.4135 11.5864 14.4864 14.09 15.91L15.36 14.64C15.6319 14.3711 15.9751 14.1858 16.3491 14.1061C16.7231 14.0263 17.1121 14.0554 17.47 14.19C18.3773 14.5286 19.3199 14.7634 20.28 14.89C20.7658 14.9585 21.2094 15.2032 21.5265 15.5775C21.8437 15.9518 22.0122 16.4296 22 16.92Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  <span>0851-XXXX-XXXX</span>
+                  <!-- <span>0851-XXXX-XXXX</span> -->
                 </li>
                 <li>
                   <svg class="footer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -221,7 +219,7 @@
               <h5 class="column-title">快速链接</h5>
               <ul class="column-list">
                 <li><a href="https://www.gznc.edu.cn" target="_blank" rel="noopener">贵州师范学院官网</a></li>
-                <li><a href="https://math.gznc.edu.cn" target="_blank" rel="noopener">数学与大数据学院</a></li>
+                <li><a href="https://mcs.gznc.edu.cn/" target="_blank" rel="noopener">数学与大数据学院</a></li>
                 <li><a href="https://ailab.gznc.edu.cn" target="_blank" rel="noopener">人工智能重点实验室</a></li>
               </ul>
             </div>
@@ -229,7 +227,7 @@
             <div class="footer-column">
               <h5 class="column-title">关注我们</h5>
               <div class="social-links">
-                <a href="https://github.com" target="_blank" rel="noopener" class="social-link" title="GitHub">
+                <!-- <a href="https://github.com" target="_blank" rel="noopener" class="social-link" title="GitHub">
                   <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
                   </svg>
@@ -238,7 +236,7 @@
                   <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.269-.03-.406-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 01-.969.983.976.976 0 01-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 01-.969.983.976.976 0 01-.969-.983c0-.542.434-.982.969-.982z"/>
                   </svg>
-                </a>
+                </a> -->
               </div>
             </div>
           </div>
@@ -268,16 +266,12 @@
       <TemplatePanel @select="showTemplateDialog = false" />
     </el-dialog>
 
-    <el-dialog v-model="showFormulaEditor" title="插入公式" width="700px" class="custom-dialog">
-      <div class="dialog-alert">
-        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-          <path d="M12 16v-4M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span>支持 LaTeX 语法，例如：$E=mc^2$、$\frac{a}{b}$、$\sqrt{x}$ 等</span>
-      </div>
-      <FormulaLatexEditor v-model="formulaLatex" />
-      <FormulaPreview :latex="formulaLatex" />
+    <el-dialog v-model="showFormulaEditor" title="插入公式" width="1000px" class="custom-dialog">
+      <FormulaLatexEditor v-model="formulaLatex">
+        <template #preview>
+          <FormulaPreview :latex="formulaLatex" />
+        </template>
+      </FormulaLatexEditor>
       <template #footer>
         <div class="dialog-footer">
           <el-button class="dialog-btn" @click="showFormulaEditor = false">取消</el-button>
@@ -297,8 +291,8 @@
             <div class="notice-title">导出的 Word 文档特性：</div>
             <ul class="notice-list">
               <li>所有内容均为可编辑格式</li>
-              <li>公式为 Word 原生公式（OMML），可直接编辑</li>
-              <li>流程图为 Word 图形对象（DrawingML），可编辑</li>
+              <li>公式为 Word 原生公式，可直接编辑</li>
+              <li>流程图为 Word 图形对象，可编辑</li>
               <li>表格为原生表格，可编辑</li>
             </ul>
           </div>
@@ -404,7 +398,6 @@ import { debugLog } from '@/utils/scroll'
 import { createScrollSyncManager, type SmoothScrollSyncManager } from '@/utils/smoothScrollSync'
 import { scrollDebugger } from '@/utils/scrollSyncDebugger'
 import { formatMathFormulas } from '@/utils/markdownFormatter'
-import { positionMapper } from '@/utils/positionMapper'
 
 const documentStore = useDocumentStore()
 const authStore = useAuthStore()
@@ -415,8 +408,6 @@ const exportLoading = ref(false)
 const selectedTemplateId = ref<number | undefined>(undefined)
 
 const syncScrollMode = ref(true)
-
-const isSelectionSyncing = ref(false)
 
 let scrollSyncManager: SmoothScrollSyncManager | null = null
 
@@ -611,10 +602,6 @@ const handleParse = async () => {
     markdown.value = formatted
     await documentStore.parseMarkdown(formatted)
     
-    if (documentStore.udm?.blocks) {
-      positionMapper.setBlocks(documentStore.udm.blocks)
-    }
-    
     await nextTick()
     await new Promise(resolve => setTimeout(resolve, 200))
     
@@ -787,39 +774,6 @@ const switchToLogin = () => {
 const switchToForgot = () => {
   showLoginDialog.value = false
   showForgotDialog.value = true
-}
-
-const handleEditorSelectionChange = (range: { startOffset: number; endOffset: number } | null) => {
-  if (isSelectionSyncing.value) return
-  
-  if (!range) {
-    previewPanelRef.value?.clearHighlight()
-    return
-  }
-  
-  isSelectionSyncing.value = true
-  
-  previewPanelRef.value?.highlightBySourceRange(range.startOffset, range.endOffset)
-  
-  setTimeout(() => {
-    isSelectionSyncing.value = false
-  }, 100)
-}
-
-const handlePreviewSelectionChange = (range: { startOffset: number; endOffset: number } | null) => {
-  if (isSelectionSyncing.value) return
-  
-  if (!range) {
-    return
-  }
-  
-  isSelectionSyncing.value = true
-  
-  contentInputRef.value?.setSelection(range.startOffset, range.endOffset)
-  
-  setTimeout(() => {
-    isSelectionSyncing.value = false
-  }, 100)
 }
 </script>
 

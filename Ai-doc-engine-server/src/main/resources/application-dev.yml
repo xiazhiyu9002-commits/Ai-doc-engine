@@ -1,51 +1,52 @@
-# 开发环境配置
+# ==============================================================================
+# Ai-Doc-Engine 开发环境配置
+# ==============================================================================
+# 职责：开发环境特定配置，覆盖主配置
+# 层级：环境层（优先级高于主配置）
+# 维护：开发环境专用配置项，直接使用硬编码值便于本地开发
+# ==============================================================================
+
+# ==================== 数据源配置（开发环境）====================
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/ai_doc_engine?currentSchema=public
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:123456}
+    username: postgres
+    password: 123456
 
+  # ==================== JPA 开发配置 ====================
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
     properties:
       hibernate:
-        default_schema: public
+        format_sql: true
 
+  # ==================== 邮件配置（开发环境）====================
   mail:
     host: smtp.qq.com
     port: 465
     username: 2219746581@qq.com
     password: kaztvuiusvvhdjhj
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            enable: true
 
-
-
-# 开发环境日志级别
+# ==================== 日志配置（开发环境）====================
 logging:
   level:
     root: INFO
-    com.aidoc.engine: INFO
-    org.springframework.web: WARN
-    org.springframework.security: WARN
+    com.aidoc.engine: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-# 开发环境前端地址
+# ==================== 应用配置（开发环境）====================
 app:
   frontend-url: http://localhost:3514
 
-# JWT 配置
+# ==================== JWT 配置（开发环境）====================
 jwt:
-  secret: ai-doc-engine-secret-key-for-jwt-token-generation-must-be-at-least-256-bits
-  expiration: 604800000  # 7 天（毫秒）
+  secret: ai-doc-engine-dev-secret-key-for-development-only-must-be-at-least-256-bits
+  expiration: 7200000
 
-# 一站式服务大厅 OAuth2 配置（后续把这3个填上即可）
+# ==================== OAuth 配置（开发环境测试）====================
 oauth:
   client-id: test
   client-secret: test

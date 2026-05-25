@@ -84,7 +84,6 @@ const emit = defineEmits<{
   (e: 'scroll', data: ScrollData): void
   (e: 'parse'): void
   (e: 'clear'): void
-  (e: 'selectionChange', range: { startOffset: number; endOffset: number } | null): void
 }>()
 
 const content = ref(props.modelValue)
@@ -392,54 +391,11 @@ const insertBlockAtCursor = (blockText: string) => {
   })
 }
 
-const handleSelectionChange = () => {
-  if (!textareaElement) return
-  
-  const startOffset = textareaElement.selectionStart
-  const endOffset = textareaElement.selectionEnd
-  
-  if (startOffset !== endOffset) {
-    emit('selectionChange', { startOffset, endOffset })
-  } else {
-    emit('selectionChange', null)
-  }
-}
-
-const setSelection = (startOffset: number, endOffset: number) => {
-  if (!textareaElement) return
-  
-  textareaElement.focus()
-  textareaElement.setSelectionRange(startOffset, endOffset)
-  
-  const lineHeight = getLineHeight(textareaElement)
-  const lines = content.value.substring(0, startOffset).split('\n')
-  const lineNumber = lines.length
-  
-  const targetScrollTop = (lineNumber - 1) * lineHeight - textareaElement.clientHeight / 3
-  const maxScroll = textareaElement.scrollHeight - textareaElement.clientHeight
-  textareaElement.scrollTop = Math.max(0, Math.min(targetScrollTop, maxScroll))
-}
-
-const getSelection = (): { startOffset: number; endOffset: number } | null => {
-  if (!textareaElement) return null
-  
-  const startOffset = textareaElement.selectionStart
-  const endOffset = textareaElement.selectionEnd
-  
-  if (startOffset !== endOffset) {
-    return { startOffset, endOffset }
-  }
-  return null
-}
-
 onMounted(() => {
   nextTick(() => {
     if (textareaRef.value && textareaRef.value.textarea) {
       textareaElement = textareaRef.value.textarea as HTMLTextAreaElement
       textareaElement.addEventListener('scroll', handleScroll, { passive: true })
-      textareaElement.addEventListener('click', handleSelectionChange)
-      textareaElement.addEventListener('keyup', handleSelectionChange)
-      textareaElement.addEventListener('select', handleSelectionChange)
     }
   })
 })
@@ -447,9 +403,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (textareaElement) {
     textareaElement.removeEventListener('scroll', handleScroll)
-    textareaElement.removeEventListener('click', handleSelectionChange)
-    textareaElement.removeEventListener('keyup', handleSelectionChange)
-    textareaElement.removeEventListener('select', handleSelectionChange)
   }
 })
 
@@ -464,9 +417,7 @@ defineExpose({
   restoreScrollPosition,
   getScrollData,
   insertTextAtCursor,
-  insertBlockAtCursor,
-  setSelection,
-  getSelection
+  insertBlockAtCursor
 })
 </script>
 
